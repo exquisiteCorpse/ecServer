@@ -27,9 +27,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/:userId', (req, res, next) => {
   req.user.reload(User.scope('populated'))
-    .then(function (popUser) {
-      res.json(popUser)
-    })
+    .then(popUser => res.json(popUser))
     .catch(next)
 })
 
