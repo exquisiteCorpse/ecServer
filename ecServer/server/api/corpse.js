@@ -4,7 +4,7 @@
  * Corpse Model: title, totalCells, complete
  */
 const router = require('express').Router()
-const {Corpse, Phots} = require('../db/models')
+const {Corpse, Photos} = require('../db/models')
 module.exports = router
 const Sequelize = require('sequelize')
 
