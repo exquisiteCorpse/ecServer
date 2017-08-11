@@ -22,13 +22,14 @@ MODELS
 - User
 	- username
 	- email
+	- password
+	- googleId
+	- facebookId
 
 - Corpse
 	- title
 	- total-cells
 	- complete (boolean)
-	- likes
-	- UserId as 'creator'
 
 - Photo
 	- imageURL
