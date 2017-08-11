@@ -4,7 +4,7 @@ module.exports = router
 
 router.get('/', (req, res, next) => {
   Assignment.findAll()
-    .then(assignements => res.json(assignements))
+    .then(assignments => res.json(assignments))
     .catch(next)
 })
 
@@ -13,7 +13,7 @@ router.get('/:userId', (req, res, next) => {
   Assignment.findAll({where:{
     userId: req.params.userId
   }})
-    .then(assignements => res.json(assignements))
+    .then(assignments => res.json(assignments))
     .catch(next)
 })
 
@@ -21,12 +21,12 @@ router.get('/:userId', (req, res, next) => {
  router.delete('/:id',function(req, res, next) {
    Assignment.destroy({where: {
      id: req.params.id
-   }}).then(assignements => res.json(assignements))
+   }}).then(assignments => res.json(assignments))
    .catch(next)
  })
 
  router.post('/', function(req, res, next) {
    Assignment.create(req.body)
-   .then(assignements => res.json(assignements))
+   .then(assignments => res.json(assignments))
    .catch(next)
  })
