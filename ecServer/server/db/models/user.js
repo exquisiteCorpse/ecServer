@@ -18,6 +18,10 @@ const User = db.define('user', {
   salt: {
     type: Sequelize.STRING
   },
+  isAdmin: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
   googleId: {
     type: Sequelize.STRING
   },
