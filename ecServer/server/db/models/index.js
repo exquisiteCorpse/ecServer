@@ -1,18 +1,18 @@
 const User = require('./user')
 const Corpse = require('./corpse')
-const Assignment = require('./assignments')
-const Like = require('./likes')
-const Photo = require('./photos')
+const Assignment = require('./assignment')
+const Like = require('./like')
+const Photo = require('./photo')
 
 Photo.belongsTo(Corpse)
 Photo.belongsTo(User)
 
 Assignment.belongsTo(Corpse)
-Assignment.belongsTo(User, {as: 'assignorId'})
-Assignment.belongsTo(User, {as: 'assigneeId'})
+Assignment.belongsTo(User, {as: 'assignor'})
+Assignment.belongsTo(User, {as: 'assignee'})
 
 Corpse.hasMany(Photo, {onDelete: 'CASCADE'})
-Corpse.hasMany(Likes, {onDelete: 'CASCADE'})
+Corpse.hasMany(Like, {onDelete: 'CASCADE'})
 
 Like.belongsTo(User)
 Like.belongsTo(Corpse)
@@ -21,7 +21,7 @@ User.hasMany(Photo, {onDelete: 'CASCADE'})
 User.hasMany(Corpse, {onDelete: 'CASCADE'})
 User.hasMany(Like, {onDelete: 'CASCADE'})
 
-User.hasMany(Users, {as: 'friends'})
+User.belongsToMany(User, {through: 'Friend', as: 'friend'})
 
 module.exports = {
   User,

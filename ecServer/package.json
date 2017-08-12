@@ -1,5 +1,5 @@
 {
-  "name": "exquisite corpse server",
+  "name": "exquisitecorpseserver",
   "version": "1.0.0",
   "description": "server and web structure",
   "engines": {
@@ -20,6 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.15.3",
+    "babel-preset-stage-0": "^6.24.1",
     "body-parser": "^1.16.1",
     "connect-session-sequelize": "^4.1.0",
     "express": "^4.14.1",
