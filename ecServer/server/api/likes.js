@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Like} = require('../db/likes')
+const {Like} = require('../db/models')
 module.exports = router
 
 router.get('/', (req, res, next) => {
