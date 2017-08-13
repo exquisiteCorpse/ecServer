@@ -1,1 +1,1 @@
-import './components/DrawerNavigator'
+import './components/Nav'
