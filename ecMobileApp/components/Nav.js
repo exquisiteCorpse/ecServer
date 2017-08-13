@@ -1,26 +1,31 @@
 import React, { Component } from 'react'
-import { AppRegistry, Text, View, Button } from 'react-native'
+import { AppRegistry, Text, View, Button, StyleSheet } from 'react-native'
 import { StackNavigator } from 'react-navigation'
 import CameraNavButton from './CameraNavButton'
 import AppCamera from './AppCamera'
 import Home from './Home'
 import HomeNavButton from './HomeNavButton'
+import ButtonStyles from './ButtonStyles'
 
-class HomeScreen extends Component {
+class NavScreen extends Component {
   static navigationOptions = {
     title: 'Welcome',
   }
   render() {
     const {navigate} = this.props.navigation
     return (
-      <View>
-        <CameraNavButton navigate={navigate}/>
-        <HomeNavButton navigate={navigate}/>
+      <View style={ButtonStyles.container}>
+        <View style={ButtonStyles.buttonContainer}>
+          <CameraNavButton navigate={navigate} styles={ButtonStyles}/>
+        </View>
+        <View style={ButtonStyles.buttonContainer}>
+          <HomeNavButton navigate={navigate} styles={ButtonStyles}/>
+        </View>
       </View>
     )
   }
 }
-
+//
 //the way we use the nav here puts a back arrow at top
 class CameraScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -33,7 +38,7 @@ class CameraScreen extends React.Component {
   }
 }
 
-class HomeView extends React.Component {
+class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: 'Home'
   })
@@ -45,9 +50,11 @@ class HomeView extends React.Component {
 }
 
 const ecMobileApp = StackNavigator({
-  Home: { screen: HomeScreen },
+  Nav: { screen: NavScreen },
   Camera: { screen:  CameraScreen },
-  HomeView: {screen: HomeView}
+  Home: {screen: HomeScreen}
 })
+
+
 
 AppRegistry.registerComponent('ecMobileApp', () => ecMobileApp)
