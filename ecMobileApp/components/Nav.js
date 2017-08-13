@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { AppRegistry, Text, View, Button, StyleSheet } from 'react-native'
 import { StackNavigator } from 'react-navigation'
-import CameraNavButton from './CameraNavButton'
 import AppCamera from './AppCamera'
 import Home from './Home'
+import UserEdges from './User/UserEdges'
+import CameraNavButton from './CameraNavButton'
 import HomeNavButton from './HomeNavButton'
+import EdgesNavButton from './Navigation/EdgesNavButton'
 import ButtonStyles from './ButtonStyles'
 
 class NavScreen extends Component {
@@ -21,12 +23,15 @@ class NavScreen extends Component {
         <View style={ButtonStyles.buttonContainer}>
           <HomeNavButton navigate={navigate} styles={ButtonStyles}/>
         </View>
+        <View style={ButtonStyles.buttonContainer}>
+          <EdgesNavButton navigate={navigate} styles={ButtonStyles}/>
+        </View>
       </View>
     )
   }
 }
-//
-//the way we use the nav here puts a back arrow at top
+
+// the way we use the nav here puts a back arrow at top
 class CameraScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: 'Camera'
@@ -49,10 +54,22 @@ class HomeScreen extends React.Component {
   }
 }
 
+class EdgesScreen extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: 'Edges'
+  })
+  render() {
+    return (
+        <UserEdges/>
+    )
+  }
+}
+
 const ecMobileApp = StackNavigator({
   Nav: { screen: NavScreen },
   Camera: { screen:  CameraScreen },
-  Home: {screen: HomeScreen}
+  Home: {screen: HomeScreen},
+  Edges: {screen: EdgesScreen}
 })
 
 
