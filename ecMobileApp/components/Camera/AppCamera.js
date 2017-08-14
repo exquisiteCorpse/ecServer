@@ -14,7 +14,6 @@ export default class AppCamera extends Component {
           }}
           style={styles.preview}
           aspect={Camera.constants.Aspect.fill}
-          orientation={Camera.constants.Orientation.landscapeLeft}
         >
           <Text style={styles.capture} onPress={this.takePicture.bind(this) } >[capture]</Text>
         </Camera>
