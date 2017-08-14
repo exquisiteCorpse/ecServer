@@ -3,15 +3,17 @@ import { StyleSheet, Text, ScrollView, View, Image } from 'react-native'
 
 export default class UserEdges extends Component {
   render () {
+    const baseUri = 'https://battleoftheships.herokuapp.com/images/corpse'
+
     return (
       <View style={styles.container}>
         <ScrollView>
-          {[0, 1, 2].map((index) => {
+          {[1, 2].map((index) => {
             return (
               <View key={index}>
                 <Image
                   style={styles.corpseEdge}
-                  source={require('../../public/images/edge.jpg')}
+                  source={{uri: `${baseUri}${index}/1.jpg`}}
                   resizeMode='cover'
                 />
               </View>)
@@ -32,7 +34,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   corpseEdge: {
-    height: 200,
+    height: 120,
+    width: 360,
     marginTop: 15,
     marginBottom: 15
   }
