@@ -10,18 +10,18 @@ export default class Home extends Component {
           corpseId: 1,
           title: 'ShoeMash',
           images: [
-            {pictureId: 1, authorName: 'Shayne', pictureUrl: require('../public/images/corpse1/1.png')},
-            {pictureId: 2, authorName: 'Fara', pictureUrl: require('../public/images/corpse1/2.png')},
-            {pictureId: 3, authorName: 'Kevin', pictureUrl: require('../public/images/corpse1/3.png')}
+            {pictureId: 1, authorName: 'Shayne'},
+            {pictureId: 2, authorName: 'Fara'},
+            {pictureId: 3, authorName: 'Kevin'}
           ]
         },
         {
           corpseId: 2,
           title: 'ShoeMashBW',
           images: [
-            {pictureId: 1, authorName: 'Shayne', pictureUrl: require('../public/images/corpse2/1.png')},
-            {pictureId: 2, authorName: 'Fara', pictureUrl: require('../public/images/corpse2/2.png')},
-            {pictureId: 3, authorName: 'Kevin', pictureUrl: require('../public/images/corpse2/3.png')}
+            {pictureId: 1, authorName: 'Shayne'},
+            {pictureId: 2, authorName: 'Fara'},
+            {pictureId: 3, authorName: 'Kevin'}
           ]
         }
 
@@ -71,6 +71,7 @@ export default class Home extends Component {
   }
 
   render () {
+    const baseUri = 'https://battleoftheships.herokuapp.com/images/corpse'
     return (
       <ScrollView>
         <View style={styles.container}>
@@ -92,7 +93,7 @@ export default class Home extends Component {
                     <Image
                       key={image.pictureId}
                       style={styles.imageCorpse}
-                      source={image.pictureUrl}
+                      source={{uri: `${baseUri}${corpse.corpseId}/${image.pictureId}.jpg`}}
                     />
                   )
                 })}
@@ -142,8 +143,7 @@ const styles = StyleSheet.create({
   },
   imageCorpse: {
     width: 360,
-    height: 120,
-    alignItems: 'center'
+    height: 120
   },
   textLikedCorpse: {
     fontWeight: 'bold'
