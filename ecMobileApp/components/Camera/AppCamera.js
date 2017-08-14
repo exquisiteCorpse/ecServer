@@ -4,15 +4,7 @@ import { getPhoto } from '../store'
 import Camera from 'react-native-camera'
 
 export default class AppCamera extends Component {
-  takePicture () {
-    console.log('************camera button pressed')
-    this.camera.capture()
-      .then((data) => {
-        console.log(data)
-        this.props.navigate('NewPreview')
-      })
-      .catch(err => console.error(err))
-  }
+
   render () {
     return (
       <View style={styles.container}>
@@ -29,9 +21,23 @@ export default class AppCamera extends Component {
       </View>
     )
   }
+
+  takePicture () {
+    console.log('************camera button pressed')
+    this.camera.capture()
+      .then((data) => {
+        console.log(data)
+        this.props.navigate('NewPreview')
+      })
+      .catch(err => console.error(err))
+  }
 }
 
 AppRegistry.registerComponent('AppCamera', () => AppCamera)
+
+AppCamera.navigationOptions = ({ navigation }) => ({
+  title: 'Camera'
+})
 
 const styles = StyleSheet.create({
   capture: {

@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, ScrollView, View, Image } from 'react-native'
-import LikeButton from './LikeButton'
-export default class Home extends Component {
+import LikeButton from '../Button/LikeButton'
+
+export default class UserHome extends Component {
   constructor () {
     super()
     this.state = {
@@ -38,7 +39,7 @@ export default class Home extends Component {
   handleLike (corpseId) {
     let userLike = this.state.userLikes.includes(corpseId)
     if (userLike) {
-      //remove like
+      // remove like
       const likeArray = this.state.likes.map((like) => {
         if (like.corpseId === corpseId) {
           like.likes--
@@ -51,9 +52,8 @@ export default class Home extends Component {
         userLikes: this.state.userLikes.filter((like) => { return like !== corpseId }),
         likes: likeArray
       })
-
     } else {
-      //add likes
+      // add likes
       const likeArray = this.state.likes.map((like) => {
         if (like.corpseId === corpseId) {
           like.likes++
@@ -88,7 +88,6 @@ export default class Home extends Component {
               </View>
               <View style={styles.viewCorpse}>
                 {corpse.images.map((image) => {
-
                   return (
                     <Image
                       key={image.pictureId}
@@ -99,7 +98,7 @@ export default class Home extends Component {
                 })}
               </View>
               <View style={styles.imageCorpseBottom}>
-                <LikeButton corpseId={corpse.corpseId} userLike={userLike} likes={likesAll.likes} style={styles} handleLike={this.handleLike}/>
+                <LikeButton corpseId={corpse.corpseId} userLike={userLike} likes={likesAll.likes} style={styles} handleLike={this.handleLike} />
                 <Text>3 Share</Text>
               </View>
             </View>)
@@ -109,6 +108,10 @@ export default class Home extends Component {
     )
   }
 }
+
+UserHome.navigationOptions = ({ navigation }) => ({
+  title: 'Home'
+})
 
 const styles = StyleSheet.create({
   container: {
