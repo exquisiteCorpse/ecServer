@@ -24,6 +24,10 @@ export default class UserEdges extends Component {
   }
 }
 
+UserEdges.navigationOptions = ({ navigation }) => ({
+  title: 'Edges'
+})
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
