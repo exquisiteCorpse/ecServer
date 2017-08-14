@@ -3,11 +3,6 @@ import { AppRegistry, StyleSheet, Text, View } from 'react-native'
 import Camera from 'react-native-camera'
 
 export default class AppCamera extends Component {
-  takePicture () {
-    this.camera.capture()
-      .then((data) => console.log(data))
-      .catch(err => console.error(err))
-  }
   render () {
     return (
       <View style={styles.container}>
@@ -22,7 +17,17 @@ export default class AppCamera extends Component {
       </View>
     )
   }
+
+  takePicture () {
+    this.camera.capture()
+      .then((data) => console.log(data))
+      .catch(err => console.error(err))
+  }
 }
+
+AppCamera.navigationOptions = ({ navigation }) => ({
+  title: 'Camera'
+})
 
 const styles = StyleSheet.create({
   capture: {

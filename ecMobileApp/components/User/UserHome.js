@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, ScrollView, View, Image } from 'react-native'
-import LikeButton from './LikeButton'
-export default class Home extends Component {
+import LikeButton from '../Button/LikeButton'
+
+export default class UserHome extends Component {
   constructor () {
     super()
     this.state = {
@@ -10,18 +11,18 @@ export default class Home extends Component {
           corpseId: 1,
           title: 'ShoeMash',
           images: [
-            {pictureId: 1, authorName: 'Shayne', pictureUrl: require('../public/images/corpse1/1.png')},
-            {pictureId: 2, authorName: 'Fara', pictureUrl: require('../public/images/corpse1/2.png')},
-            {pictureId: 3, authorName: 'Kevin', pictureUrl: require('../public/images/corpse1/3.png')}
+            {pictureId: 1, authorName: 'Shayne', pictureUrl: require('../../public/images/corpse1/1.png')},
+            {pictureId: 2, authorName: 'Fara', pictureUrl: require('../../public/images/corpse1/2.png')},
+            {pictureId: 3, authorName: 'Kevin', pictureUrl: require('../../public/images/corpse1/3.png')}
           ]
         },
         {
           corpseId: 2,
           title: 'ShoeMashBW',
           images: [
-            {pictureId: 1, authorName: 'Shayne', pictureUrl: require('../public/images/corpse2/1.png')},
-            {pictureId: 2, authorName: 'Fara', pictureUrl: require('../public/images/corpse2/2.png')},
-            {pictureId: 3, authorName: 'Kevin', pictureUrl: require('../public/images/corpse2/3.png')}
+            {pictureId: 1, authorName: 'Shayne', pictureUrl: require('../../public/images/corpse2/1.png')},
+            {pictureId: 2, authorName: 'Fara', pictureUrl: require('../../public/images/corpse2/2.png')},
+            {pictureId: 3, authorName: 'Kevin', pictureUrl: require('../../public/images/corpse2/3.png')}
           ]
         }
 
@@ -38,7 +39,7 @@ export default class Home extends Component {
   handleLike (corpseId) {
     let userLike = this.state.userLikes.includes(corpseId)
     if (userLike) {
-      //remove like
+      // remove like
       const likeArray = this.state.likes.map((like) => {
         if (like.corpseId === corpseId) {
           like.likes--
@@ -51,9 +52,8 @@ export default class Home extends Component {
         userLikes: this.state.userLikes.filter((like) => { return like !== corpseId }),
         likes: likeArray
       })
-
     } else {
-      //add likes
+      // add likes
       const likeArray = this.state.likes.map((like) => {
         if (like.corpseId === corpseId) {
           like.likes++
@@ -87,7 +87,6 @@ export default class Home extends Component {
               </View>
               <View style={styles.viewCorpse}>
                 {corpse.images.map((image) => {
-
                   return (
                     <Image
                       key={image.pictureId}
@@ -98,7 +97,7 @@ export default class Home extends Component {
                 })}
               </View>
               <View style={styles.imageCorpseBottom}>
-                <LikeButton corpseId={corpse.corpseId} userLike={userLike} likes={likesAll.likes} style={styles} handleLike={this.handleLike}/>
+                <LikeButton corpseId={corpse.corpseId} userLike={userLike} likes={likesAll.likes} style={styles} handleLike={this.handleLike} />
                 <Text>3 Share</Text>
               </View>
             </View>)
@@ -108,6 +107,10 @@ export default class Home extends Component {
     )
   }
 }
+
+UserHome.navigationOptions = ({ navigation }) => ({
+  title: 'Home'
+})
 
 const styles = StyleSheet.create({
   container: {
