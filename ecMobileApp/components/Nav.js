@@ -4,6 +4,7 @@ import { StackNavigator } from 'react-navigation'
 import AppCamera from './AppCamera'
 import Home from './Home'
 import UserEdges from './User/UserEdges'
+import NewCorpse from './NewCorpse'
 import CameraNavButton from './CameraNavButton'
 import HomeNavButton from './HomeNavButton'
 import EdgesNavButton from './Navigation/EdgesNavButton'
@@ -37,8 +38,9 @@ class CameraScreen extends React.Component {
     title: 'Camera'
   })
   render() {
+    const {navigate} = this.props.navigation
     return (
-        <AppCamera/>
+        <AppCamera navigate={navigate}/>
     )
   }
 }
@@ -65,11 +67,24 @@ class EdgesScreen extends React.Component {
   }
 }
 
+export class NewCorpsePreview extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: 'New Preview'
+  })
+  render() {
+
+    return (
+      <NewCorpse/>
+    )
+  }
+}
+
 const ecMobileApp = StackNavigator({
   Nav: { screen: NavScreen },
   Camera: { screen:  CameraScreen },
   Home: {screen: HomeScreen},
-  Edges: {screen: EdgesScreen}
+  Edges: {screen: EdgesScreen},
+  NewPreview: {screen: NewCorpsePreview}
 })
 
 
