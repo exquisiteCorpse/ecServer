@@ -74,7 +74,7 @@ export class NewCorpsePreview extends React.Component {
   render() {
 
     return (
-      <NewCorpse/>
+      <NewCorpse />
     )
   }
 }

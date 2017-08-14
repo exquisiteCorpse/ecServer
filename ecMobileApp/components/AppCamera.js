@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { AppRegistry, StyleSheet, Text, View } from 'react-native'
-
+import { getPhoto } from '../store'
 import Camera from 'react-native-camera'
 
 export default class AppCamera extends Component {
@@ -30,8 +30,6 @@ export default class AppCamera extends Component {
     )
   }
 }
-// onPress={this.takePicture.bind(this)}
-//  onPress={() => this.props.navigate('NewPreview')}
 
 AppRegistry.registerComponent('AppCamera', () => AppCamera)
 
