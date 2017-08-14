@@ -93,7 +93,7 @@ export default class Home extends Component {
                     <Image
                       key={image.pictureId}
                       style={styles.imageCorpse}
-                      source={{uri: `${baseUri}${corpse.corpseId}/${image.pictureId}.png`}}
+                      source={{uri: `${baseUri}${corpse.corpseId}/${image.pictureId}.jpg`}}
                     />
                   )
                 })}
