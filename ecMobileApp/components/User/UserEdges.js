@@ -13,7 +13,7 @@ export default class UserEdges extends Component {
               <View key={index}>
                 <Image
                   style={styles.corpseEdge}
-                  source={{uri: `${baseUri}${index}/1.png`}}
+                  source={{uri: `${baseUri}${index}/1.jpg`}}
                   resizeMode='cover'
                 />
               </View>)
