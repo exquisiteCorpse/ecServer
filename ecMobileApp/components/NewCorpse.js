@@ -1,14 +1,33 @@
 import React, { Component } from 'react'
-import { AppRegistry, StyleSheet, Text, View } from 'react-native'
-
-import Camera from 'react-native-camera'
-
+import { AppRegistry, StyleSheet, Text, View, Image } from 'react-native'
+import {connect} from 'react-redux'
+import store from '../store'
 
 export default class NewCorpse extends Component {
 
+  constructor () {
+    super()
+    this.state = store.getState()
+  }
+
+  componentDidMount () {
+    this.unsubscribe = store.subscribe(() => this.setState(store.getState()))
+  }
+
+  componentWillUnmount () {
+    this.unsubscribe()
+  }
+
   render () {
+    console.log(this.state.singlePhoto.path,this.state.singlePhoto.mediaUri)
     return (
-      <Text>Camera photo preview screen</Text>
+      <View>
+
+        <Image
+          style={{width: 400, height: 300}}
+          source={{uri: this.state.singlePhoto.path}}
+        />
+      </View>
     )
   }
 }
