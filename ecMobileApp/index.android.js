@@ -38,6 +38,12 @@ const Stack2 = StackNavigator({
     navigationOptions: ({ navigation }) => ({
       headerLeft: <DrawerIcon {...navigation} />
     })
+  },
+  Screen5: {
+    screen: NewCorpse,
+    navigationOptions: ({ navigation }) => ({
+      headerLeft: <DrawerIcon {...navigation} />
+    })
   }
 })
 
@@ -58,7 +64,8 @@ const Stack4 = StackNavigator({
 })
 
 const Stack5 = StackNavigator({
-  Screen5: { screen: NewCorpse,
+  Screen5: {
+    screen: NewCorpse,
     navigationOptions: ({ navigation }) => ({
       headerLeft: <DrawerIcon {...navigation} />
     })
@@ -93,14 +100,15 @@ const AppNav = DrawerNavigator({
         label: 'Edges'
       }
     }
-  },
-  NewCorpse: { screen: Stack5,
-    navigationOptions: {
-      drawer: {
-        label: 'NewCorpse'
-      }
-    }
   }
+  // ,
+  // NewCorpse: { screen: Stack5,
+  //   navigationOptions: {
+  //     drawer: {
+  //       label: 'NewCorpse'
+  //     }
+  //   }
+  // }
 })
 
 class ecMobileApp extends Component {
