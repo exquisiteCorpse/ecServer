@@ -6,11 +6,16 @@ import AppCamera from './components/Camera/AppCamera'
 import UserHome from './components/User/UserHome'
 import UserEdges from './components/User/UserEdges'
 import { Icon } from 'react-native-elements'
+import NewCorpse from './components/NewCorpse'
+import {Provider} from 'react-redux'
+import store from './store'
 
 export default class ecMobileApp extends Component {
   render () {
     return (
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     )
   }
 }
@@ -62,6 +67,14 @@ const Stack4 = StackNavigator({
   }
 })
 
+const Stack5 = StackNavigator({
+  Screen5: { screen: NewCorpse,
+    navigationOptions: ({ navigation }) => ({
+      headerLeft: <DrawerIcon {...navigation} />
+    })
+  }
+})
+
 const AppNav = DrawerNavigator({
   Home: { screen: Stack1,
     navigationOptions: {
@@ -88,6 +101,13 @@ const AppNav = DrawerNavigator({
     navigationOptions: {
       drawer: {
         label: 'Edges'
+      }
+    }
+  },
+  NewCorpse: { screen: Stack5,
+    navigationOptions: {
+      drawer: {
+        label: 'NewCorpse'
       }
     }
   }
