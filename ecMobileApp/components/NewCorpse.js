@@ -3,7 +3,7 @@ import { AppRegistry, StyleSheet, Text, View, Image } from 'react-native'
 import {connect} from 'react-redux'
 import store from '../store'
 
-export default class NewCorpse extends Component {
+class NewCorpse extends Component {
   constructor () {
     super()
     this.state = store.getState()
@@ -34,3 +34,8 @@ export default class NewCorpse extends Component {
 NewCorpse.navigationOptions = ({ navigation }) => ({
   title: 'New Corpse'
 })
+
+const mapStateToProps = null
+const mapDispatchToProps = null
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewCorpse)
