@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { AppRegistry, StyleSheet, View, Text, TouchableOpacity } from 'react-native'
+import { AppRegistry, StyleSheet, View, Text } from 'react-native'
 import Camera from './Camera/AppCamera'
-import { Icon } from 'react-native-elements'
 
 export default class App extends Component {
   render () {
@@ -15,14 +14,9 @@ export default class App extends Component {
   }
 }
 
-App.navigationOptions = {
-  title: 'Exquisite Corpse',
-  headerleft: (
-    <TouchableOpacity onPress={() => this.props.navigate('DrawerOpen')}>
-      <Icon name='bars' type='font-awesome' color='#f50' />
-    </TouchableOpacity>
-  )
-}
+App.navigationOptions = ({ navigation }) => ({
+  title: 'Welcome'
+})
 
 const styles = StyleSheet.create({
   container: {
