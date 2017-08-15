@@ -4,33 +4,35 @@
  * Corpse Model: title, totalCells, complete
  */
 const router = require('express').Router()
-const {Corpse, Photos} = require('../db/models')
+const {Corpse, Photo, User, Assignment, Like} = require('../db/models')
 module.exports = router
 const Sequelize = require('sequelize')
+const fs = require('fs')
+const publicCorpseDir = 'public/corpse'
 
 /**
  * Default columns
  */
 const attributesToReturn = {attributes: ['id', 'title', 'totalCells', 'complete']}
 
-function isLoggedIn (req, res, next) {
-    if (req.user) {
-        next()
-    } else {
-        const error = new Error('Not allowed!!')
-        error.status = 401
-        next(error)
-    }
+function isLoggedIn(req, res, next) {
+  if (req.user) {
+    next()
+  } else {
+    const error = new Error('Not allowed!!')
+    error.status = 401
+    next(error)
+  }
 }
 
-function isAdmin (req, res, next) {
-    if (req.user.isAdmin) {
-        next()
-    } else {
-        const error = new Error('Must have admin privileges')
-        error.status = 401
-        next(error)
-    }
+function isAdmin(req, res, next) {
+  if (req.user.isAdmin) {
+    next()
+  } else {
+    const error = new Error('Must have admin privileges')
+    error.status = 401
+    next(error)
+  }
 }
 
 /**
@@ -38,23 +40,26 @@ function isAdmin (req, res, next) {
  * returns
  */
 router.param('corpseId', (req, res, next, id) => {
-    Corpse.findById(id,
-        {
-            include: [
-                {model: Photos, attributes: ['id', 'cell', 'imageUrl']}
-            ]
-        })
-        .then(corpse => {
-            if (!corpse) {
-                const err = Error('Corpse not found')
-                err.status = 400
-                throw err
-            }
-            req.corpse = corpse
-            next()
-            return null
-        })
-        .catch(next)
+  Corpse.findById(id,
+    {
+      include: [
+        {model: Photo},
+        {model: Assignment},
+        {model: User, attributes: ['id', 'username', 'email']},
+        {model: Like, attributes: ['id', 'userId']}
+      ]
+    })
+    .then(corpse => {
+      if (!corpse) {
+        const err = Error('Corpse not found')
+        err.status = 400
+        throw err
+      }
+      req.corpse = corpse
+      next()
+      return null
+    })
+    .catch(next)
 })
 
 /**
@@ -63,9 +68,9 @@ router.param('corpseId', (req, res, next, id) => {
  * returns all corpse
  */
 router.get('/', (req, res, next) => {
-    Corpse.findAll(attributesToReturn)
-        .then(corpse => res.json(corpse))
-        .catch(next)
+  Corpse.findAll(attributesToReturn)
+    .then(corpse => res.json(corpse))
+    .catch(next)
 })
 
 /**
@@ -74,7 +79,7 @@ router.get('/', (req, res, next) => {
  * returns a specific corpse by corpseId
  */
 router.get('/:corpseId', (req, res, next) => {
-    res.json(req.corpse)
+  res.json(req.corpse)
 })
 
 /**
@@ -83,9 +88,14 @@ router.get('/:corpseId', (req, res, next) => {
  * creates and returns new Corpse
  */
 router.post('/', (req, res, next) => {
-    Corpse.create(req.body)
-        .then(corpse=> res.status(201).json(corpse))
-        .catch(next)
+  Corpse.create(req.body)
+    .then(corpse => {
+      const corpseDir = `${publicCorpseDir}/${corpse.id}`
+      if (!fs.existsSync(publicCorpseDir)) fs.mkdirSync(publicCorpseDir)
+      fs.mkdirSync(corpseDir)
+      res.status(201).json(corpse)
+    })
+    .catch(next)
 })
 
 /**
@@ -94,9 +104,10 @@ router.post('/', (req, res, next) => {
  * updates and existing corpse by its corpseId
  */
 router.put('/:corpseId', (req, res, next) => {
-    Corpse.update(req.body, {where: {id: req.corpse.id}})
-        .then(corpse => res.status(200).json(corpse))
-        .catch(next)
+  // Corpse.update(req.body, {where: {id: req.corpse.id}})
+  req.corpse.update(req.body)
+    .then(corpse => res.status(201).json(corpse))
+    .catch(next)
 })
 
 /**
@@ -105,7 +116,11 @@ router.put('/:corpseId', (req, res, next) => {
  * deletes an existing corpse by its corpseId
  */
 router.delete('/:corpseId', (req, res, next) => {
-    req.corpse.destroy()
-        .then(() => res.status(204).end())
-        .catch(next)
+  const dirPath = `${publicCorpseDir}/${req.corpse.id}`
+  if (fs.existsSync(dirPath)) {
+    fs.rmdirSync(dirPath)
+  }
+  req.corpse.destroy()
+    .then(() => res.status(204).end())
+    .catch(next)
 })
