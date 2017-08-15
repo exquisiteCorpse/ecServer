@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { AppRegistry, StyleSheet, Text, View } from 'react-native'
-import { getPhoto } from '../../store'
+import store, { getPhoto } from '../../store'
 import Camera from 'react-native-camera'
 
 export default class AppCamera extends Component {
@@ -22,11 +22,10 @@ export default class AppCamera extends Component {
   }
 
   takePicture () {
-    console.log('************camera button pressed')
     this.camera.capture()
       .then((data) => {
-        console.log(data)
-        //this.props.navigate('NewPreview')
+        store.dispatch(getPhoto(data))
+        this.props.navigation.navigate('NewCorpse')
       })
       .catch(err => console.error(err))
   }
