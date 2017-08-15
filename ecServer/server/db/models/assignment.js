@@ -5,6 +5,9 @@ const Assignment = db.define('assignment', {
   complete: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
+  },
+  cell: {
+    type: Sequelize.ENUM('top', 'middle', 'bottom')
   }
 })
 

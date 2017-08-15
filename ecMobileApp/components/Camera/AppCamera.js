@@ -25,7 +25,7 @@ export default class AppCamera extends Component {
     this.camera.capture()
       .then((data) => {
         store.dispatch(getPhoto(data))
-        this.props.navigation.navigate('NewCorpse')
+        this.props.navigation.navigate('Screen5')
       })
       .catch(err => console.error(err))
   }
