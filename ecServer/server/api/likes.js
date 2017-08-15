@@ -8,23 +8,22 @@ router.get('/', (req, res, next) => {
     .catch(next)
 })
 
-router.get('/:corpseId', (req, res, next) => {
-  Like.findAll({where:{
-    corpsId: req.params.corpseId
-  }})
+router.get('/:id', (req, res, next) => {
+  const {id} = req.params
+  Like.findById(id)
     .then(likes => res.json(likes))
     .catch(next)
 })
 
- router.delete('/:id',function(req, res, next) {
-   Like.destroy({where: {
-     id: req.params.id
-   }}).then(likes => res.json(likes))
-   .catch(next)
- })
+router.delete('/:id', function (req, res, next) {
+  Like.destroy({where: {id: req.params.id}})
+    .then(likes => res.json(likes))
+    .catch(next)
+})
 
- router.post('/', function(req, res, next) {
-   Like.create(req.body)
-   .then(likes => res.json(likes))
-   .catch(next)
- })
+router.post('/', function (req, res, next) {
+  const {corpseId, userId} = req.body
+  Like.findOrCreate({where: {corpseId, userId}})
+    .spread(() => res.status(204).end())
+    .catch(next)
+})
