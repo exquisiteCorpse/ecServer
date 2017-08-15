@@ -10,16 +10,6 @@ import NewCorpse from './components/NewCorpse'
 import {Provider} from 'react-redux'
 import store from './store'
 
-export default class ecMobileApp extends Component {
-  render () {
-    return (
-      <Provider store={store}>
-        <App />
-      </Provider>
-    )
-  }
-}
-
 const DrawerIcon = ({ navigate }) => {
   if (Platform.OS === 'ios') {
     return null
@@ -113,4 +103,16 @@ const AppNav = DrawerNavigator({
   }
 })
 
-AppRegistry.registerComponent('ecMobileApp', () => AppNav)
+class ecMobileApp extends Component {
+  render () {
+    return (
+      <Provider store={store}>
+        <AppNav>
+          <App/>
+        </AppNav>
+      </Provider>
+    )
+  }
+}
+
+AppRegistry.registerComponent('ecMobileApp', () => ecMobileApp)

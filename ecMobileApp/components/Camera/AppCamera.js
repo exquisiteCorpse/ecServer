@@ -31,7 +31,7 @@ export default class AppCamera extends Component {
   }
 }
 
-AppRegistry.registerComponent('AppCamera', () => AppCamera)
+//AppRegistry.registerComponent('AppCamera', () => AppCamera)
 
 AppCamera.navigationOptions = ({ navigation }) => ({
   title: 'Camera'
