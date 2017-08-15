@@ -15,11 +15,6 @@ export const getPhoto = (photo) => {
 
 /* ------------       THUNK CREATORS     ------------------ */
 
-export const fetchPhotoData = () => {
-  return dispatch => {
-  }
-}
-
 /* ------------       REDUCERS     ------------------ */
 
 export default function (state = {}, action) {
