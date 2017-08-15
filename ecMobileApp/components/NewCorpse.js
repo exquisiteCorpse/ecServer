@@ -4,7 +4,6 @@ import {connect} from 'react-redux'
 import store from '../store'
 
 export default class NewCorpse extends Component {
-
   constructor () {
     super()
     this.state = store.getState()
@@ -19,7 +18,7 @@ export default class NewCorpse extends Component {
   }
 
   render () {
-    console.log(this.state.singlePhoto.path,this.state.singlePhoto.mediaUri)
+    console.log(this.state.singlePhoto.path, this.state.singlePhoto.mediaUri)
     return (
       <View>
 
@@ -31,3 +30,7 @@ export default class NewCorpse extends Component {
     )
   }
 }
+
+NewCorpse.navigationOptions = ({ navigation }) => ({
+  title: 'New Corpse'
+})

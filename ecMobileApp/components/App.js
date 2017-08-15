@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { AppRegistry, StyleSheet, View, Text, TouchableOpacity } from 'react-native'
+import { AppRegistry, StyleSheet, View, Text } from 'react-native'
 import Camera from './Camera/AppCamera'
 
 export default class App extends Component {
@@ -14,9 +14,9 @@ export default class App extends Component {
   }
 }
 
-App.navigationOptions = {
-  title: 'Exquisite Corpse'
-}
+App.navigationOptions = ({ navigation }) => ({
+  title: 'Welcome'
+})
 
 const styles = StyleSheet.create({
   container: {
