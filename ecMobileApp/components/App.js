@@ -4,25 +4,23 @@ import FBSDK, { LoginManager } from 'react-native-fbsdk'
 
 export default class App extends Component {
 
-  // _fbAuth() {
-  //   LoginManager.logInWithPublishPermissions(['public_profile']).then((result) => {
-  //     if (result.isCancelled) console.log('Login was cancelled')
-  //     else console.log('Login was a success ' + result.grantedPermissions.toString())
-  //   }, (error) => {
-  //     console.log('An error occured: ' + error)
-  //   })
-  // }
-// <TouchableOpacity onPress={this._fbAuth()}>
-//   <Text>Facebook</Text>
-// </TouchableOpacity>
+  _fbAuth () {
+    LoginManager.logInWithReadPermissions(['public_profile']).then((result) => {
+      if (result.isCancelled) console.log('Login was cancelled')
+      else console.log('Login was a success ' + result.grantedPermissions.toString())
+    }, (error) => {
+      console.log('An error occured: ' + error)
+    })
+  }
 
   render () {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to Exquisite Corpse!
-
-        </Text>
+          Welcome to Exquisite Corpse!</Text>
+        <TouchableOpacity onPress={this._fbAuth}>
+          <Text>Facebook Login</Text>
+        </TouchableOpacity>
       </View>
     )
   }
