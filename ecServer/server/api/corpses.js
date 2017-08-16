@@ -1,4 +1,5 @@
 'use strict'
+// import {mergePhotos} from '../utility/utility'
 /**
  * Corpse API
  * Corpse Model: title, totalCells, complete
@@ -9,14 +10,13 @@ module.exports = router
 const Sequelize = require('sequelize')
 const fs = require('fs')
 const publicCorpseDir = 'public/corpse'
-const {mergePhotos} = require('../util/util')
 
 /**
  * Default columns
  */
 const attributesToReturn = {attributes: ['id', 'title', 'totalCells', 'complete']}
 
-function isLoggedIn(req, res, next) {
+function isLoggedIn (req, res, next) {
   if (req.user) {
     next()
   } else {
@@ -26,7 +26,7 @@ function isLoggedIn(req, res, next) {
   }
 }
 
-function isAdmin(req, res, next) {
+function isAdmin (req, res, next) {
   if (req.user.isAdmin) {
     next()
   } else {
@@ -105,11 +105,13 @@ router.post('/', (req, res, next) => {
  * updates and existing corpse by its corpseId
  */
 router.put('/:corpseId', (req, res, next) => {
-  const {append} = req.body || '-append'
   const corpseDir = `${publicCorpseDir}/${req.corpse.id}`
   req.corpse.update(req.body)
     .then(corpse => {
-      if (corpse.complete) mergePhotos(req.corpse.id, corpseDir, append)
+      if (corpse.complete) {
+        mergePhotos(req.corpse.id, corpseDir, req.corpse.append)
+        //TODO: message emitter
+      }
       res.status(201).json(corpse)
     })
     .catch(next)
@@ -129,3 +131,33 @@ router.delete('/:corpseId', (req, res, next) => {
     .then(() => res.status(204).end())
     .catch(next)
 })
+
+// Kevin: This would not work in the utility file, remember - SUBMIT HELP TICKET
+
+/***
+ * mergePhotos - creates the Corpse static image file
+ * @param corpseId      corpseId
+ * @param corpsePath    path to corpseId's directory
+ * @param appendValue   -append for vertical, +append for horizontal
+ */
+const im = require('imagemagick')
+const mergePhotos = (corpseId, corpsePath, appendValue) => {
+  const imagesToConvert = [appendValue,
+    `${corpsePath}/${corpseId}-top.jpg`,
+    `${corpsePath}/${corpseId}-middle.jpg`,
+    `${corpsePath}/${corpseId}-bottom.jpg`,
+    `${corpsePath}/ExquisiteCorpse.jpg`]
+  im.convert(imagesToConvert, (err) => {
+    if (err) throw console.error('generateCorpsImage', err)
+    //TODO: DELETE PHOTOS AND ASSIGNMENTS
+    if (fs.existsSync(`${corpsePath}/${corpseId}-top.jpg`)) {
+      fs.unlinkSync(`${corpsePath}/${corpseId}-top.jpg`)
+    }
+    if (fs.existsSync(`${corpsePath}/${corpseId}-middle.jpg`)) {
+      fs.unlinkSync(`${corpsePath}/${corpseId}-middle.jpg`)
+    }
+    if (fs.existsSync(`${corpsePath}/${corpseId}-bottom.jpg`)) {
+      fs.unlinkSync(`${corpsePath}/${corpseId}-bottom.jpg`)
+    }
+  })
+}

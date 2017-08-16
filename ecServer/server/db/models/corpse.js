@@ -13,6 +13,10 @@ const Corpse = db.define('corpse', {
   complete: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
+  },
+  append: {
+    type: Sequelize.ENUM('-append', '+append'),
+    defaultValue: '-append'
   }
 })
 
