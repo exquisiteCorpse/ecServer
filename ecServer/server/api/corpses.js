@@ -9,6 +9,7 @@ module.exports = router
 const Sequelize = require('sequelize')
 const fs = require('fs')
 const publicCorpseDir = 'public/corpse'
+const {mergePhotos} = require('../util/util')
 
 /**
  * Default columns
@@ -104,9 +105,13 @@ router.post('/', (req, res, next) => {
  * updates and existing corpse by its corpseId
  */
 router.put('/:corpseId', (req, res, next) => {
-  // Corpse.update(req.body, {where: {id: req.corpse.id}})
+  const {append} = req.body || '-append'
+  const corpseDir = `${publicCorpseDir}/${req.corpse.id}`
   req.corpse.update(req.body)
-    .then(corpse => res.status(201).json(corpse))
+    .then(corpse => {
+      if (corpse.complete) mergePhotos(req.corpse.id, corpseDir, append)
+      res.status(201).json(corpse)
+    })
     .catch(next)
 })
 
