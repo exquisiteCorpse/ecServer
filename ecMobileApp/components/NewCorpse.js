@@ -21,7 +21,6 @@ class NewCorpse extends Component {
     console.log(this.state.singlePhoto.path, this.state.singlePhoto.mediaUri)
     return (
       <View>
-
         <Image
           style={{width: 400, height: 300}}
           source={{uri: this.state.singlePhoto.path}}
