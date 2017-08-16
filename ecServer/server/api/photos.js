@@ -36,7 +36,7 @@ router.post('/', (req, res, next) => {
       srcPath: filePathName,
       dstPath: edgeFilePathName,
       width: width,
-      height: height * 0.025,
+      height: 20,
       quality: 1,
       gravity: 'South'
     })

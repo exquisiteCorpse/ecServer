@@ -1,5 +1,4 @@
 'use strict'
-// import {mergePhotos} from '../utility/utility'
 /**
  * Corpse API
  * Corpse Model: title, totalCells, complete
@@ -10,6 +9,7 @@ module.exports = router
 const Sequelize = require('sequelize')
 const fs = require('fs')
 const publicCorpseDir = 'public/corpse'
+const {mergePhotos} = require('../utility/utility')
 
 /**
  * Default columns
@@ -105,12 +105,21 @@ router.post('/', (req, res, next) => {
  * updates and existing corpse by its corpseId
  */
 router.put('/:corpseId', (req, res, next) => {
-  const corpseDir = `${publicCorpseDir}/${req.corpse.id}`
+  const corpsePath = `${publicCorpseDir}/${req.corpse.id}`
+  const {id} = req.corpse
   req.corpse.update(req.body)
     .then(corpse => {
       if (corpse.complete) {
-        mergePhotos(req.corpse.id, corpseDir, req.corpse.append)
-        //TODO: message emitter
+        mergePhotos(req.corpse.id, corpsePath, req.corpse.append)
+        if (fs.existsSync(`${corpsePath}/${id}-top.jpg`)) {
+          fs.unlinkSync(`${corpsePath}/${id}-top.jpg`)
+        }
+        if (fs.existsSync(`${corpsePath}/${id}-middle.jpg`)) {
+          fs.unlinkSync(`${corpsePath}/${id}-middle.jpg`)
+        }
+        if (fs.existsSync(`${corpsePath}/${id}-bottom.jpg`)) {
+          fs.unlinkSync(`${corpsePath}/${id}-bottom.jpg`)
+        }
       }
       res.status(201).json(corpse)
     })
@@ -140,24 +149,3 @@ router.delete('/:corpseId', (req, res, next) => {
  * @param corpsePath    path to corpseId's directory
  * @param appendValue   -append for vertical, +append for horizontal
  */
-const im = require('imagemagick')
-const mergePhotos = (corpseId, corpsePath, appendValue) => {
-  const imagesToConvert = [appendValue,
-    `${corpsePath}/${corpseId}-top.jpg`,
-    `${corpsePath}/${corpseId}-middle.jpg`,
-    `${corpsePath}/${corpseId}-bottom.jpg`,
-    `${corpsePath}/ExquisiteCorpse.jpg`]
-  im.convert(imagesToConvert, (err) => {
-    if (err) throw console.error('generateCorpsImage', err)
-    //TODO: DELETE PHOTOS AND ASSIGNMENTS
-    if (fs.existsSync(`${corpsePath}/${corpseId}-top.jpg`)) {
-      fs.unlinkSync(`${corpsePath}/${corpseId}-top.jpg`)
-    }
-    if (fs.existsSync(`${corpsePath}/${corpseId}-middle.jpg`)) {
-      fs.unlinkSync(`${corpsePath}/${corpseId}-middle.jpg`)
-    }
-    if (fs.existsSync(`${corpsePath}/${corpseId}-bottom.jpg`)) {
-      fs.unlinkSync(`${corpsePath}/${corpseId}-bottom.jpg`)
-    }
-  })
-}

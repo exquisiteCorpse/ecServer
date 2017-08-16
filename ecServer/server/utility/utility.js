@@ -16,4 +16,4 @@ const mergePhotos = (corpseId, corpsePath, appendValue = '-append') => {
   })
 }
 
-export {mergePhotos}
+module.exports = {mergePhotos}
