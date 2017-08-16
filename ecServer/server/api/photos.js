@@ -29,7 +29,6 @@ router.post('/', (req, res, next) => {
   const edgeFilePathName = `${corpseDir}/${basePhotoName}-edge.jpg`
   fs.writeFileSync(filePathName, basePhotoData)
 
-  // create the edge
   im.identify(`${corpseDir}/${basePhotoName}.jpg`, (err, data) => {
     if (err) throw console.error('Photos', err)
     const {width, height} = data
@@ -45,6 +44,7 @@ router.post('/', (req, res, next) => {
 
   Photo.create({
     imgUrl: `${corpseDir}/${basePhotoName}.jpg`,
+    edgeUrl: `${corpseDir}/${basePhotoName}-edge.jpg`,
     cell,
     corpseId,
     userId
@@ -66,13 +66,11 @@ router.delete('/:id', (req, res, next) => {
   let {id} = req.params
   Photo.findById(id)
     .then(photo => {
-      const filename = photo.imgUrl.split('.')[0]
-      const edgeFile = `${filename}-edge.jpg`
       if (fs.existsSync(photo.imgUrl)) {
         fs.unlink(photo.imgUrl)
       }
-      if (fs.existsSync(edgeFile)) {
-        fs.unlink(edgeFile)
+      if (fs.existsSync(photo.edgeUrl)) {
+        fs.unlink(photo.edgeUrl)
       }
       return photo
     })
