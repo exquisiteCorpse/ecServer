@@ -23,8 +23,8 @@ const DrawerIcon = ({ navigate }) => {
   }
 }
 
-const Stack1 = StackNavigator({
-  Screen1: {
+const WelcomeStack = StackNavigator({
+  AppScreen: {
     screen: App,
     navigationOptions: ({ navigation }) => ({
       headerLeft: <DrawerIcon {...navigation} />
@@ -32,40 +32,28 @@ const Stack1 = StackNavigator({
   }
 })
 
-const Stack2 = StackNavigator({
-  Screen2: {
+const AddNewCorpseStack = StackNavigator({
+  AppCameraScreen: {
     screen: AppCamera,
     navigationOptions: ({ navigation }) => ({
       headerLeft: <DrawerIcon {...navigation} />
     })
   },
-  Screen5: {
-    screen: NewCorpse,
+  NewCorpseScreen: {
+    screen: NewCorpse
+  }
+})
+
+const AllCorpsesStack = StackNavigator({
+  UserHomeScreen: { screen: UserHome,
     navigationOptions: ({ navigation }) => ({
       headerLeft: <DrawerIcon {...navigation} />
     })
   }
 })
 
-const Stack3 = StackNavigator({
-  Screen3: { screen: UserHome,
-    navigationOptions: ({ navigation }) => ({
-      headerLeft: <DrawerIcon {...navigation} />
-    })
-  }
-})
-
-const Stack4 = StackNavigator({
-  Screen4: { screen: UserEdges,
-    navigationOptions: ({ navigation }) => ({
-      headerLeft: <DrawerIcon {...navigation} />
-    })
-  }
-})
-
-const Stack5 = StackNavigator({
-  Screen5: {
-    screen: NewCorpse,
+const AllEdgesStack = StackNavigator({
+  UserEdgesScreen: { screen: UserEdges,
     navigationOptions: ({ navigation }) => ({
       headerLeft: <DrawerIcon {...navigation} />
     })
@@ -73,42 +61,10 @@ const Stack5 = StackNavigator({
 })
 
 const AppNav = DrawerNavigator({
-  Home: { screen: Stack1,
-    navigationOptions: {
-      drawer: {
-        label: 'App'
-      }
-    }
-  },
-  Camera: { screen: Stack2,
-    navigationOptions: {
-      drawer: {
-        label: 'Camera'
-      }
-    }
-  },
-  UserHome: { screen: Stack3,
-    navigationOptions: {
-      drawer: {
-        label: 'Home'
-      }
-    }
-  },
-  UserEdges: { screen: Stack4,
-    navigationOptions: {
-      drawer: {
-        label: 'Edges'
-      }
-    }
-  }
-  // ,
-  // NewCorpse: { screen: Stack5,
-  //   navigationOptions: {
-  //     drawer: {
-  //       label: 'NewCorpse'
-  //     }
-  //   }
-  // }
+  Home: { screen: WelcomeStack },
+  Camera: { screen: AddNewCorpseStack },
+  UserHome: { screen: AllCorpsesStack },
+  UserEdges: { screen: AllEdgesStack }
 })
 
 class ecMobileApp extends Component {
@@ -116,7 +72,7 @@ class ecMobileApp extends Component {
     return (
       <Provider store={store}>
         <AppNav>
-          <App/>
+          <App />
         </AppNav>
       </Provider>
     )

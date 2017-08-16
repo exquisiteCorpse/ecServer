@@ -4,7 +4,10 @@ const db = require('../db')
 
 const Photo = db.define('photo', {
   imgUrl: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING
+  },
+  edgeUrl: {
+    type: Sequelize.STRING
   },
   cell: {
     type: Sequelize.ENUM('top', 'middle', 'bottom')

@@ -9,13 +9,14 @@ module.exports = router
 const Sequelize = require('sequelize')
 const fs = require('fs')
 const publicCorpseDir = 'public/corpse'
+const {mergePhotos} = require('../utility/utility')
 
 /**
  * Default columns
  */
 const attributesToReturn = {attributes: ['id', 'title', 'totalCells', 'complete']}
 
-function isLoggedIn(req, res, next) {
+function isLoggedIn (req, res, next) {
   if (req.user) {
     next()
   } else {
@@ -25,7 +26,7 @@ function isLoggedIn(req, res, next) {
   }
 }
 
-function isAdmin(req, res, next) {
+function isAdmin (req, res, next) {
   if (req.user.isAdmin) {
     next()
   } else {
@@ -120,9 +121,24 @@ router.post('/', (req, res, next) => {
  * updates and existing corpse by its corpseId
  */
 router.put('/:corpseId', (req, res, next) => {
-  // Corpse.update(req.body, {where: {id: req.corpse.id}})
+  const corpsePath = `${publicCorpseDir}/${req.corpse.id}`
+  const {id} = req.corpse
   req.corpse.update(req.body)
-    .then(corpse => res.status(201).json(corpse))
+    .then(corpse => {
+      if (corpse.complete) {
+        mergePhotos(req.corpse.id, corpsePath, req.corpse.append)
+        if (fs.existsSync(`${corpsePath}/${id}-top.jpg`)) {
+          fs.unlinkSync(`${corpsePath}/${id}-top.jpg`)
+        }
+        if (fs.existsSync(`${corpsePath}/${id}-middle.jpg`)) {
+          fs.unlinkSync(`${corpsePath}/${id}-middle.jpg`)
+        }
+        if (fs.existsSync(`${corpsePath}/${id}-bottom.jpg`)) {
+          fs.unlinkSync(`${corpsePath}/${id}-bottom.jpg`)
+        }
+      }
+      res.status(201).json(corpse)
+    })
     .catch(next)
 })
 
@@ -140,3 +156,12 @@ router.delete('/:corpseId', (req, res, next) => {
     .then(() => res.status(204).end())
     .catch(next)
 })
+
+// Kevin: This would not work in the utility file, remember - SUBMIT HELP TICKET
+
+/***
+ * mergePhotos - creates the Corpse static image file
+ * @param corpseId      corpseId
+ * @param corpsePath    path to corpseId's directory
+ * @param appendValue   -append for vertical, +append for horizontal
+ */
