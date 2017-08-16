@@ -3,6 +3,7 @@ const {Photo} = require('../db/models')
 module.exports = router
 const fs = require('fs')
 const publicCorpseDir = 'public/corpse'
+const im = require('imagemagick')
 
 router.get('/:id', (req, res, next) => {
   const {id} = req.params
@@ -24,9 +25,26 @@ router.post('/', (req, res, next) => {
   }
   const basePhotoName = `${corpseId}-${cell}`
   const basePhotoData = Buffer.alloc(encodedPhoto.length, encodedPhoto, 'base64')
-  fs.writeFile(`${corpseDir}/${basePhotoName}.jpg`, basePhotoData)
+  const filePathName = `${corpseDir}/${basePhotoName}.jpg`
+  const edgeFilePathName = `${corpseDir}/${basePhotoName}-edge.jpg`
+  fs.writeFileSync(filePathName, basePhotoData)
+
+  im.identify(`${corpseDir}/${basePhotoName}.jpg`, (err, data) => {
+    if (err) throw console.error('Photos', err)
+    const {width, height} = data
+    im.crop({
+      srcPath: filePathName,
+      dstPath: edgeFilePathName,
+      width: width,
+      height: 20,
+      quality: 1,
+      gravity: 'South'
+    })
+  })
+
   Photo.create({
     imgUrl: `${corpseDir}/${basePhotoName}.jpg`,
+    edgeUrl: `${corpseDir}/${basePhotoName}-edge.jpg`,
     cell,
     corpseId,
     userId
@@ -50,6 +68,9 @@ router.delete('/:id', (req, res, next) => {
     .then(photo => {
       if (fs.existsSync(photo.imgUrl)) {
         fs.unlink(photo.imgUrl)
+      }
+      if (fs.existsSync(photo.edgeUrl)) {
+        fs.unlink(photo.edgeUrl)
       }
       return photo
     })
