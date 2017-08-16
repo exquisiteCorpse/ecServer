@@ -10,7 +10,7 @@ export default class LikesButton extends Component {
     return (
       <View>
         <TouchableOpacity
-          onPress={() => this.props.handleLike(this.props.corpseId)}
+          onPress={() => this.props.handleLike(this.props.corpseId, this.props.userId, this.props.userLike)}
         >
           <View>
             {like}

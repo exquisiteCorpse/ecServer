@@ -15,6 +15,15 @@ router.get('/:id', (req, res, next) => {
     .catch(next)
 })
 
+router.delete('/:userId/:corpseId', function (req, res, next) {
+  Like.destroy({where:{
+    userId: req.params.userId,
+    corpseId: req.params.corpseId
+  }})
+    .then(likes => res.json(likes))
+    .catch(next)
+})
+
 router.delete('/:id', function (req, res, next) {
   Like.destroy({where: {id: req.params.id}})
     .then(likes => res.json(likes))
@@ -22,8 +31,7 @@ router.delete('/:id', function (req, res, next) {
 })
 
 router.post('/', function (req, res, next) {
-  const {corpseId, userId} = req.body
-  Like.findOrCreate({where: {corpseId, userId}})
-    .spread(() => res.status(204).end())
-    .catch(next)
+  Like.create(req.body)
+  .then((like) => {res.json(like)})
+  .catch(next)
 })

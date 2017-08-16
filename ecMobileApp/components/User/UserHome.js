@@ -1,107 +1,61 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, ScrollView, View, Image } from 'react-native'
 import LikeButton from '../Button/LikeButton'
-
-export default class UserHome extends Component {
-  constructor () {
-    super()
-    this.state = {
-      corpses: [
-        {
-          corpseId: 1,
-          title: 'ShoeMash',
-          images: [
-            {pictureId: 1, authorName: 'Shayne'},
-            {pictureId: 2, authorName: 'Fara'},
-            {pictureId: 3, authorName: 'Kevin'}
-          ]
-        },
-        {
-          corpseId: 2,
-          title: 'ShoeMashBW',
-          images: [
-            {pictureId: 1, authorName: 'Shayne'},
-            {pictureId: 2, authorName: 'Fara'},
-            {pictureId: 3, authorName: 'Kevin'}
-          ]
-        }
-
-      ],
-      likes: [
-        { corpseId: 1, likes: 5 },
-        { corpseId: 2, likes: 2 }
-      ],
-      userLikes: [1]
-    }
-    this.handleLike = this.handleLike.bind(this)
-  }
-
-  handleLike (corpseId) {
-    let userLike = this.state.userLikes.includes(corpseId)
-    if (userLike) {
-      // remove like
-      const likeArray = this.state.likes.map((like) => {
-        if (like.corpseId === corpseId) {
-          like.likes--
-          return like
-        } else {
-          return like
-        }
-      })
-      this.setState({
-        userLikes: this.state.userLikes.filter((like) => { return like !== corpseId }),
-        likes: likeArray
-      })
-    } else {
-      // add likes
-      const likeArray = this.state.likes.map((like) => {
-        if (like.corpseId === corpseId) {
-          like.likes++
-          return like
-        } else {
-          return like
-        }
-      })
-
-      this.setState({
-        userLikes: [...this.state.userLikes, corpseId],
-        likes: likeArray
-      })
-    }
+import styles from '../Style/UserHomeStyles'
+import {connect} from 'react-redux'
+import { fetchLikes, fetchCorpes, destroyLike, postNewLike } from '../../store'
+import { imageUrl } from '../../store/url'
+class UserHome extends Component {
+  componentDidMount () {
+    this.props.fetchData()
   }
 
   render () {
-    const baseUri = 'https://battleoftheships.herokuapp.com/images/corpse'
+    ///likes set up for render will move to its own file
+    const userLikes = []
+    const likesCorpse = {}
+    if (this.props.likes) {
+      this.props.likes.forEach((like) => {
+        if (like.userId === 1) {
+          userLikes.push(like.corpseId)
+        }
+        if (likesCorpse[like.corpseId]) {
+          likesCorpse[like.corpseId]++
+        } else {
+          likesCorpse[like.corpseId] = 1
+        }
+      })
+    }
+
     return (
       <ScrollView>
         <View style={styles.container}>
-          {this.state.corpses.map((corpse) => {
-            let likesAll = this.state.likes.find((like) => { return like.corpseId === corpse.corpseId })
-            let userLike = this.state.userLikes.includes(corpse.corpseId)
-            let authors = ''
-
-            return (<View key={corpse.corpseId} style={styles.corpse}>
-              <View style={styles.imageCorpseTop}>
-                <Text style={styles.textCorpse}>{corpse.images.map((image, i) => { return image.authorName }).join('|')}</Text>
-                <Text style={styles.titleCorpse}>{corpse.title}</Text>
-                <Text style={styles.textCorpse}>...</Text>
-              </View>
-              <View style={styles.viewCorpse}>
-                {corpse.images.map((image) => {
-                  return (
-                    <Image
-                      key={image.pictureId}
-                      style={styles.imageCorpse}
-                      source={{uri: `${baseUri}${corpse.corpseId}/${image.pictureId}.jpg`}}
-                    />
-                  )
-                })}
-              </View>
-              <View style={styles.imageCorpseBottom}>
-                <LikeButton corpseId={corpse.corpseId} userLike={userLike} likes={likesAll.likes} style={styles} handleLike={this.handleLike} />
-                <Text>3 Share</Text>
-              </View>
-            </View>)
+          {this.props.corpses.map((corpse) => {
+            if (corpse.complete) {
+              let userLike = userLikes.includes(corpse.id)
+              return (<View key={corpse.id} style={styles.corpse}>
+                <View style={styles.imageCorpseTop}>
+                  <Text style={styles.textCorpse}>{corpse.photos.map((photo, i) => { return photo.user.username }).join('|')}</Text>
+                  <Text style={styles.titleCorpse}>{corpse.title}</Text>
+                  <Text style={styles.textCorpse}>...</Text>
+                </View>
+                <View style={styles.viewCorpse}>
+                  {corpse.photos.map((photo) => {
+                    return (
+                      <Image
+                        key={photo.id}
+                        style={styles.imageCorpse}
+                        source={{uri: `${imageUrl}/${photo.imgUrl}`}}
+                      />
+                    )
+                  }).reverse()}
+                </View>
+                <View style={styles.imageCorpseBottom}>
+                  <LikeButton corpseId={corpse.id} userLike={userLike} userId='1' likes={likesCorpse[corpse.id]} style={styles} handleLike={this.props.handleLike} />
+                  <Text>3 Share</Text>
+                </View>
+              </View>)
+            }
           })}
         </View>
       </ScrollView>
@@ -113,45 +67,33 @@ UserHome.navigationOptions = ({ navigation }) => ({
   title: 'Home'
 })
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center'
+const mapStateToProps = (state) => {
+  return {
+    likes: state.likes,
+    corpses: state.corpses
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchData: () => {
+    dispatch(fetchCorpes())
+      .then(() => {
+        dispatch(fetchLikes())
+      })
   },
-  corpse: {
-    width: 360,
-    height: 420,
-    marginTop: 15,
-    marginBottom: 15,
-    alignItems: 'center'
-  },
-  imageCorpseTop: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 360,
-    height: 30
-  },
-  imageCorpseBottom: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 360,
-    height: 30
-  },
-  viewCorpse: {
-    width: 360,
-    height: 360,
-    alignItems: 'center'
-  },
-  imageCorpse: {
-    width: 360,
-    height: 120
-  },
-  textLikedCorpse: {
-    fontWeight: 'bold'
-  },
-  titleCorpse: {
-    fontWeight: 'bold'
+  handleLike (corpseId, userId, userLike) {
+    const like = {
+      corpseId: +corpseId,
+      userId: +userId
+    }
+    if (userLike) {
+      console.log('drop', corpseId, userId, userLike)
+      dispatch(destroyLike(like))
+    } else {
+      console.log('post', corpseId, userId, userLike)
+      dispatch(postNewLike(like))
+    }
+    console.log(corpseId, userId, userLike)
   }
 })
+export default connect(mapStateToProps, mapDispatchToProps)(UserHome)
