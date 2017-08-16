@@ -74,6 +74,22 @@ router.get('/', (req, res, next) => {
     .catch(next)
 })
 
+//not sure this is the best thing | we can change based on what comes up
+router.get('/display', (req, res, next) => {
+  Corpse.findAll(
+    {
+      include: [
+        {
+          model: Photo,
+          include:  [{model: User, attributes: ['username']}]
+        }
+      ]
+    }
+  )
+    .then(corpse => res.json(corpse))
+    .catch(next)
+})
+
 /**
  * route /api/corpse/corpseId i.e. /api/corpse/1
  * GET

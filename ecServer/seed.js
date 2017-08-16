@@ -96,7 +96,8 @@ const _photo = [
   {imgUrl: '/corpse1/1-bottom.jpg', cell: 'bottom', corpseId: 1, userId: 3},
   {imgUrl: '/corpse2/2-top.jpg', cell: 'top', corpseId: 2, userId: 1},
   {imgUrl: '/corpse2/2-middle.jpg', cell: 'middle', corpseId: 2, userId: 2},
-  {imgUrl: '/corpse3/3-bottom.jpg', cell: 'bottom', corpseId: 2, userId: 1}
+  {imgUrl: '/corpse2/2-bottom.jpg', cell: 'bottom', corpseId: 2, userId: 1},
+  {imgUrl: '/corpse3/3-top.jpg', cell: 'top', corpseId: 3, userId: 1}
 ]
 
 const _like = [
