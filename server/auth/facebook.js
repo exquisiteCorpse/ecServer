@@ -1,7 +1,6 @@
 const passport = require('passport')
 const app = require('express').Router()
 const FacebookStrategy = require('passport-facebook')
-const { facebook } = require('../../secrets')
 const { User } = require('../db/models')
 module.exports = app
 
@@ -9,6 +8,13 @@ const transformFacebookProfile = (profile) => ({
   name: profile.name,
   avatar: profile.picture.data.url
 })
+
+const facebook = {
+  clientID: process.env.FACEBOOK_CLIENT_ID,
+  clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+  callbackURL: process.env.FACEBOOK_CALLBACK,
+  profileFields: process.env.FACEBOOK_PROFILE_FIELDS
+}
 
 // Register Facebook Passport strategy
 
