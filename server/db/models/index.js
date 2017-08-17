@@ -11,6 +11,7 @@ Assignment.belongsTo(Photo)
 Assignment.belongsTo(Corpse)
 Assignment.belongsTo(User, {as: 'assignor'})
 Assignment.belongsTo(User, {as: 'assignee'})
+Assignment.belongsTo(Photo)
 
 Corpse.hasMany(Photo, {onDelete: 'CASCADE'})
 Corpse.hasMany(Like, {onDelete: 'CASCADE'})
