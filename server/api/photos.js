@@ -3,7 +3,7 @@ const {Photo} = require('../db/models')
 module.exports = router
 const fs = require('fs')
 const publicCorpseDir = 'public/corpse'
-const im = require('imagemagick')
+const {imIdentify, imCrop} = require('../utility/utility')
 
 router.get('/:id', (req, res, next) => {
   const {id} = req.params
@@ -29,18 +29,18 @@ router.post('/', (req, res, next) => {
   const edgeFilePathName = `${corpseDir}/${basePhotoName}-edge.jpg`
   fs.writeFileSync(filePathName, basePhotoData)
 
-  im.identify(`${corpseDir}/${basePhotoName}.jpg`, (err, data) => {
-    if (err) throw console.error('Photos', err)
-    const {width, height} = data
-    im.crop({
-      srcPath: filePathName,
-      dstPath: edgeFilePathName,
-      width: width,
-      height: 20,
-      quality: 1,
-      gravity: 'South'
+  imIdentify(`${corpseDir}/${basePhotoName}.jpg`)
+    .then(data => {
+      return imCrop({
+        srcPath: filePathName,
+        dstPath: edgeFilePathName,
+        width: data.width,
+        height: 20,
+        quality: 1,
+        gravity: 'South'
+      })
     })
-  })
+    .catch(next)
 
   Photo.create({
     imgUrl: `${corpseDir}/${basePhotoName}.jpg`,
