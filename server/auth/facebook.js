@@ -15,7 +15,7 @@ const transformFacebookProfile = (profile) => ({
 const strategy = new FacebookStrategy(facebook, (accessToken, refreshToken, profile, done) => {
   const facebookId = profile.id
   const name = profile.displayName
-  const email = profile.email
+  const email = profile.emails[0].value
 
   User.find({where: {facebookId}})
     .then(user => user
@@ -34,6 +34,6 @@ passport.use(strategy)
 app.get('/facebook', passport.authenticate('facebook'))
 
 app.get('/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/facebook' }),
+  passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/facebook' }),
   // Redirect user back to the mobile app using Linking with a custom protocol OAuthLogin
   (req, res) => res.redirect('OAuthLogin://login?user=' + JSON.stringify(req.user)))
