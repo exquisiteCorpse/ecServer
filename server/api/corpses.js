@@ -16,7 +16,7 @@ const {mergePhotos} = require('../utility/utility')
  */
 const attributesToReturn = {attributes: ['id', 'title', 'totalCells', 'complete']}
 
-function isLoggedIn (req, res, next) {
+function isLoggedIn(req, res, next) {
   if (req.user) {
     next()
   } else {
@@ -26,7 +26,7 @@ function isLoggedIn (req, res, next) {
   }
 }
 
-function isAdmin (req, res, next) {
+function isAdmin(req, res, next) {
   if (req.user.isAdmin) {
     next()
   } else {
@@ -81,7 +81,7 @@ router.get('/display', (req, res, next) => {
       include: [
         {
           model: Photo,
-          include:  [{model: User, attributes: ['username']}]
+          include: [{model: User, attributes: ['username']}]
         }
       ]
     }
@@ -127,17 +127,28 @@ router.put('/:corpseId', (req, res, next) => {
     .then(corpse => {
       if (corpse.complete) {
         mergePhotos(req.corpse.id, corpsePath, req.corpse.append)
-        if (fs.existsSync(`${corpsePath}/${id}-top.jpg`)) {
-          fs.unlinkSync(`${corpsePath}/${id}-top.jpg`)
-        }
-        if (fs.existsSync(`${corpsePath}/${id}-middle.jpg`)) {
-          fs.unlinkSync(`${corpsePath}/${id}-middle.jpg`)
-        }
-        if (fs.existsSync(`${corpsePath}/${id}-bottom.jpg`)) {
-          fs.unlinkSync(`${corpsePath}/${id}-bottom.jpg`)
-        }
+          .then(() => {
+            if (fs.existsSync(`${corpsePath}/${id}-top.jpg`)) {
+              fs.unlinkSync(`${corpsePath}/${id}-top.jpg`)
+            }
+            if (fs.existsSync(`${corpsePath}/${id}-middle.jpg`)) {
+              fs.unlinkSync(`${corpsePath}/${id}-middle.jpg`)
+            }
+            if (fs.existsSync(`${corpsePath}/${id}-bottom.jpg`)) {
+              fs.unlinkSync(`${corpsePath}/${id}-bottom.jpg`)
+            }
+            if (fs.existsSync(`${corpsePath}/${id}-top-edge.jpg`)) {
+              fs.unlinkSync(`${corpsePath}/${id}-top-edge.jpg`)
+            }
+            if (fs.existsSync(`${corpsePath}/${id}-middle-edge.jpg`)) {
+              fs.unlinkSync(`${corpsePath}/${id}-middle-edge.jpg`)
+            }
+            if (fs.existsSync(`${corpsePath}/${id}-bottom-edge.jpg`)) {
+              fs.unlinkSync(`${corpsePath}/${id}-bottom-edge.jpg`)
+            }
+          })
+        res.status(201).json(corpse)
       }
-      res.status(201).json(corpse)
     })
     .catch(next)
 })
