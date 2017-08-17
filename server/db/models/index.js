@@ -7,6 +7,7 @@ const Photo = require('./photo')
 Photo.belongsTo(Corpse)
 Photo.belongsTo(User)
 
+Assignment.belongsTo(Photo)
 Assignment.belongsTo(Corpse)
 Assignment.belongsTo(User, {as: 'assignor'})
 Assignment.belongsTo(User, {as: 'assignee'})
