@@ -89,7 +89,7 @@ const _photo = [
   {id: 4, imgUrl: '/2/2-top.jpg', cell: 'top', corpseId: 2, userId: 1},
   {id: 5, imgUrl: '/2/2-middle.jpg', cell: 'middle', corpseId: 2, userId: 2},
   {id: 6, imgUrl: '/2/2-bottom.jpg', cell: 'bottom', corpseId: 2, userId: 1},
-  {id: 7, imgUrl: '/3/3-top.jpg', cell: 'top', corpseId: 3, userId: 1}
+  {id: 7, imgUrl: '/3/3-top.jpg', cell: 'top', corpseId: 3, userId: 1, edgeUrl: '/3/3-top-edge.jpg'}
 ]
 
 const _assignment = [
