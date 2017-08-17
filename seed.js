@@ -82,22 +82,22 @@ const _corpse = [
   {title: 'Shoe City', totalCells: 3, userId: 1, id: 3}
 ]
 
-const _assignment = [
-  {complete: true, cell: 'middle', corpseId: 1, assignorId: 1, assigneeId: 2},
-  {complete: true, cell: 'bottom', corpseId: 1, assignorId: 2, assigneeId: 3},
-  {complete: true, cell: 'middle', corpseId: 2, assignorId: 1, assigneeId: 2},
-  {complete: true, cell: 'bottom', corpseId: 2, assignorId: 2, assigneeId: 3},
-  {complete: false, cell: 'middle', corpseId: 3, assignorId: 1, assigneeId: 4}
+const _photo = [
+  {id: 1, imgUrl: '/1/1-top.jpg', cell: 'top', corpseId: 1, userId: 1},
+  {id: 2, imgUrl: '/1/1-middle.jpg', cell: 'middle', corpseId: 1, userId: 2},
+  {id: 3, imgUrl: '/1/1-bottom.jpg', cell: 'bottom', corpseId: 1, userId: 3},
+  {id: 4, imgUrl: '/2/2-top.jpg', cell: 'top', corpseId: 2, userId: 1},
+  {id: 5, imgUrl: '/2/2-middle.jpg', cell: 'middle', corpseId: 2, userId: 2},
+  {id: 6, imgUrl: '/2/2-bottom.jpg', cell: 'bottom', corpseId: 2, userId: 1},
+  {id: 7, imgUrl: '/3/3-top.jpg', cell: 'top', corpseId: 3, userId: 1}
 ]
 
-const _photo = [
-  {imgUrl: '/corpse1/1-top.jpg', cell: 'top', corpseId: 1, userId: 1},
-  {imgUrl: '/corpse1/1-middle.jpg', cell: 'middle', corpseId: 1, userId: 2},
-  {imgUrl: '/corpse1/1-bottom.jpg', cell: 'bottom', corpseId: 1, userId: 3},
-  {imgUrl: '/corpse2/2-top.jpg', cell: 'top', corpseId: 2, userId: 1},
-  {imgUrl: '/corpse2/2-middle.jpg', cell: 'middle', corpseId: 2, userId: 2},
-  {imgUrl: '/corpse2/2-bottom.jpg', cell: 'bottom', corpseId: 2, userId: 1},
-  {imgUrl: '/corpse3/3-top.jpg', cell: 'top', corpseId: 3, userId: 1}
+const _assignment = [
+  {complete: true, cell: 'middle', corpseId: 1, assignorId: 1, assigneeId: 2, photoId: 1},
+  {complete: true, cell: 'bottom', corpseId: 1, assignorId: 2, assigneeId: 3, photoId: 2},
+  {complete: true, cell: 'middle', corpseId: 2, assignorId: 1, assigneeId: 2, photoId: 4},
+  {complete: true, cell: 'bottom', corpseId: 2, assignorId: 2, assigneeId: 3, photoId: 5},
+  {complete: false, cell: 'middle', corpseId: 3, assignorId: 1, assigneeId: 4, photoId: 7}
 ]
 
 const _like = [
@@ -127,8 +127,6 @@ const _like = [
   }
 ]
 
-
-
 let seed = (_seedData, model) => {
   return Promise.map(_seedData, (data) => {
     return db.model(model).create(data)
@@ -145,10 +143,10 @@ db.sync({force: true})
    .then(friends => console.log(`Seeded ${friends.length} Friend OK!`))
    .then(() => seed(_corpse, 'corpse'))
    .then(corpses => console.log(`Seeded ${corpses.length} corpses OK!`))
-   .then(() => seed(_assignment, 'assignment'))
-   .then(assignments => console.log(`Seeded ${assignments.length} assignments OK!`))
    .then(() => seed(_photo, 'photo'))
    .then(photos => console.log(`Seeded ${photos.length} photos OK!`))
+   .then(() => seed(_assignment, 'assignment'))
+   .then(assignments => console.log(`Seeded ${assignments.length} assignments OK!`))
    .then(() => seed(_like, 'like'))
    .then(likes => console.log(`Seeded ${likes.length} likes OK!`))
   .then(() => {
