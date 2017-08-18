@@ -8,7 +8,7 @@ const {Corpse, Photo, User, Assignment, Like} = require('../db/models')
 module.exports = router
 const Sequelize = require('sequelize')
 const fs = require('fs')
-const publicCorpseDir = 'public/corpse'
+const publicCorpseDir = 'public/images'
 const {mergePhotos} = require('../utility/utility')
 
 /**
@@ -105,14 +105,15 @@ router.get('/:corpseId', (req, res, next) => {
  * creates and returns new Corpse
  */
 router.post('/', (req, res, next) => {
-  Corpse.create(req.body)
+    Corpse.create(req.body)
     .then(corpse => {
       const corpseDir = `${publicCorpseDir}/${corpse.id}`
       if (!fs.existsSync(publicCorpseDir)) fs.mkdirSync(publicCorpseDir)
       fs.mkdirSync(corpseDir)
       res.status(201).json(corpse)
     })
-    .catch(next)
+     .catch(next)
+  // res.sendStatus(200)
 })
 
 /**

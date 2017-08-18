@@ -2,7 +2,7 @@ const router = require('express').Router()
 const {Photo} = require('../db/models')
 module.exports = router
 const fs = require('fs')
-const publicCorpseDir = 'public/corpse'
+const publicCorpseDir = 'public/images'
 const {imIdentify, imCrop} = require('../utility/utility')
 
 router.get('/:id', (req, res, next) => {
@@ -16,6 +16,7 @@ router.get('/:id', (req, res, next) => {
  * cell, corpseId, userId, encodedPhoto
  */
 router.post('/', (req, res, next) => {
+  console.log(req.body)
   const {cell, corpseId, userId, encodedPhoto} = req.body
   const corpseDir = `${publicCorpseDir}/${corpseId}`
   if (!fs.existsSync(corpseDir)) {
