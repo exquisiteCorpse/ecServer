@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router-dom'
 import { logout } from '../store'
 import FacebookLogin from 'react-facebook-login'
-import { facebook } from '../../secrets'
 /**
  * COMPONENT
  *  The Main component is our 'picture frame' - it displays the navbar and anything
@@ -19,7 +18,7 @@ export class Main extends Component {
   render () {
 
     const { children, handleClick, isLoggedIn } = this.props
-    const facebookcli = facebook.clientID
+    const facebookcli = process.env.FACEBOOK_CLIENT_ID
     return (
       <div>
         <h1>Exquisite Corpse</h1>
