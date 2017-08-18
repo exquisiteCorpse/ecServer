@@ -77,19 +77,19 @@ const _Friend = [
 ]
 
 const _corpse = [
-  {title: 'Shoe Mash', totalCells: 3, userId: 1, complete: true, id: 1},
-  {title: 'Shoe Mash BW', totalCells: 3, userId: 1, complete: true, id: 2},
-  {title: 'Shoe City', totalCells: 3, userId: 1, id: 3}
+  {title: 'Shoe Mash', totalCells: 3, userId: 1, complete: true},
+  {title: 'Shoe Mash BW', totalCells: 3, userId: 1, complete: true},
+  {title: 'Shoe City', totalCells: 3, userId: 1}
 ]
 
 const _photo = [
-  {id: 1, imgUrl: '/1/1-top.jpg', cell: 'top', corpseId: 1, userId: 1},
-  {id: 2, imgUrl: '/1/1-middle.jpg', cell: 'middle', corpseId: 1, userId: 2},
-  {id: 3, imgUrl: '/1/1-bottom.jpg', cell: 'bottom', corpseId: 1, userId: 3},
-  {id: 4, imgUrl: '/2/2-top.jpg', cell: 'top', corpseId: 2, userId: 1},
-  {id: 5, imgUrl: '/2/2-middle.jpg', cell: 'middle', corpseId: 2, userId: 2},
-  {id: 6, imgUrl: '/2/2-bottom.jpg', cell: 'bottom', corpseId: 2, userId: 1},
-  {id: 7, imgUrl: '/3/3-top.jpg', cell: 'top', corpseId: 3, userId: 1, edgeUrl: '/3/3-top-edge.jpg'}
+  {imgUrl: '1-1-top.jpeg', cell: 'top', corpseId: 1, userId: 1},
+  {imgUrl: '1-2-middle.jpeg', cell: 'middle', corpseId: 1, userId: 2},
+  {imgUrl: '1-3-bottom.jpeg', cell: 'bottom', corpseId: 1, userId: 3},
+  {imgUrl: '2-1-top.jpeg', cell: 'top', corpseId: 2, userId: 1},
+  {imgUrl: '2-2-middle.jpeg', cell: 'middle', corpseId: 2, userId: 2},
+  {imgUrl: '2-1-bottom.jpeg', cell: 'bottom', corpseId: 2, userId: 1},
+  {imgUrl: '3-1-top.jpeg', cell: 'top', corpseId: 3, userId: 1, edgeUrl: '3-1-top-edge.jpeg'}
 ]
 
 const _assignment = [
