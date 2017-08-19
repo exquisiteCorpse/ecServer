@@ -18,28 +18,36 @@ const facebook = {
 
 // Register Facebook Passport strategy
 
-const strategy = new FacebookStrategy(facebook, (accessToken, refreshToken, profile, done) => {
-  const facebookId = profile.id
-  const name = profile.displayName
-  const email = profile.emails[0].value
+const strategy = new FacebookStrategy(facebook,
+  // async
+  (accessToken, refreshToken, profile, done) => {
+    const facebookId = profile.id
+    const username = profile.displayName
+    const email = profile.emails[0].value
 
-  User.find({where: {facebookId}})
-    .then(user => user
-      ? done(null, user)
-      : User.create({name, email, facebookId})
-        .then(user => done(null, user))
-    )
-    .catch(done)
+    User.find({where: {facebookId}})
+      .then(user => user
+        ? done(null, user)
+        : User.create({username, email, facebookId})
+          .then(user => done(null, user))
+      )
+      .catch(done)
 
-  done(null, transformFacebookProfile(profile._json))
-})
+    done(null, transformFacebookProfile(profile._json))
+  })
 
 passport.use(strategy)
 
+passport.serializeUser((user, done) => done(null, user))
+passport.deserializeUser((user, done) => done(null, user))
+app.use(passport.initialize())
+app.use(passport.session())
+
 // Set up Facebook auth routes
+
 app.get('/facebook', passport.authenticate('facebook'))
 
 app.get('/facebook/callback',
-  passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/facebook' }),
+  passport.authenticate('facebook', { failureRedirect: '/facebook' }),
   // Redirect user back to the mobile app using Linking with a custom protocol OAuthLogin
-  (req, res) => res.redirect('OAuthLogin://login?user=' + JSON.stringify(req.user)))
+  (req, res) => res.redirect('ecMobileApp://login?user=' + JSON.stringify(req.user)))
