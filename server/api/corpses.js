@@ -9,7 +9,7 @@ module.exports = router
 const Sequelize = require('sequelize')
 const fs = require('fs')
 const publicCorpseDir = 'public/images'
-const {mergePhotos} = require('../utility/utility')
+const {mergePhotos, createTmpFile, getFromS3Bucket} = require('../utility/utility')
 
 /**
  * Default columns
@@ -105,15 +105,9 @@ router.get('/:corpseId', (req, res, next) => {
  * creates and returns new Corpse
  */
 router.post('/', (req, res, next) => {
-    Corpse.create(req.body)
-    .then(corpse => {
-      const corpseDir = `${publicCorpseDir}/${corpse.id}`
-      if (!fs.existsSync(publicCorpseDir)) fs.mkdirSync(publicCorpseDir)
-      fs.mkdirSync(corpseDir)
-      res.status(201).json(corpse)
-    })
-     .catch(next)
-  // res.sendStatus(200)
+  Corpse.create(req.body)
+    .then(corpse => res.status(201).json(corpse))
+    .catch(next)
 })
 
 /**
@@ -122,52 +116,57 @@ router.post('/', (req, res, next) => {
  * updates and existing corpse by its corpseId
  */
 router.put('/:corpseId', (req, res, next) => {
-  const corpsePath = `${publicCorpseDir}/${req.corpse.id}`
-  const {id} = req.corpse
   req.corpse.update(req.body)
     .then(corpse => {
-      if (corpse.complete) {
-        mergePhotos(req.corpse.id, corpsePath, req.corpse.append)
-          .then(() => {
-            if (fs.existsSync(`${corpsePath}/${id}-top.jpg`)) {
-              fs.unlinkSync(`${corpsePath}/${id}-top.jpg`)
-            }
-            if (fs.existsSync(`${corpsePath}/${id}-middle.jpg`)) {
-              fs.unlinkSync(`${corpsePath}/${id}-middle.jpg`)
-            }
-            if (fs.existsSync(`${corpsePath}/${id}-bottom.jpg`)) {
-              fs.unlinkSync(`${corpsePath}/${id}-bottom.jpg`)
-            }
-            if (fs.existsSync(`${corpsePath}/${id}-top-edge.jpg`)) {
-              fs.unlinkSync(`${corpsePath}/${id}-top-edge.jpg`)
-            }
-            if (fs.existsSync(`${corpsePath}/${id}-middle-edge.jpg`)) {
-              fs.unlinkSync(`${corpsePath}/${id}-middle-edge.jpg`)
-            }
-            if (fs.existsSync(`${corpsePath}/${id}-bottom-edge.jpg`)) {
-              fs.unlinkSync(`${corpsePath}/${id}-bottom-edge.jpg`)
-            }
-          })
-        res.status(201).json(corpse)
-      }
-    })
-    .catch(next)
-})
+      if (!(corpse.complete)) {
+        const data = {
+          id: corpse.id,
+          top: '10-1-top.jpeg',
+          middle: '10-1-middle.jpeg',
+          bottom: '10-1-bottom.jpeg',
+          topData: '',
+          middleData: '',
+          bottomData: ''
+        }
 
-/**
- * route /api/corpse/corpseId
- * DEL
- * deletes an existing corpse by its corpseId
- */
-router.delete('/:corpseId', (req, res, next) => {
-  const dirPath = `${publicCorpseDir}/${req.corpse.id}`
-  if (fs.existsSync(dirPath)) {
-    fs.rmdirSync(dirPath)
-  }
-  req.corpse.destroy()
-    .then(() => res.status(204).end())
-    .catch(next)
-})
+        Promise.all([
+          getFromS3Bucket(data.top),
+          getFromS3Bucket(data.middle),
+          getFromS3Bucket(data.bottom)])
+          .then(res => {
+            data.topData = res[0].Body
+            data.middleData = res[1].Body
+            data.bottomData = res[2].Body
+            return Promise.all([
+              createTmpFile(data.top, data.topData),
+              createTmpFile(data.middle, data.middleData),
+              createTmpFile(data.bottom, data.bottomData)
+            ])
+          })
+          .then(files => {
+            console.log(files)
+            // mergePhotos(files)
+          })
+      }
+    .
+      then(res => res.status(201).json(res.data))
+        .catch(next)
+    })
+
+  /**
+   * route /api/corpse/corpseId
+   * DEL
+   * deletes an existing corpse by its corpseId
+   */
+  router.delete('/:corpseId', (req, res, next) => {
+    const dirPath = `${publicCorpseDir}/${req.corpse.id}`
+    if (fs.existsSync(dirPath)) {
+      fs.rmdirSync(dirPath)
+    }
+    req.corpse.destroy()
+      .then(() => res.status(204).end())
+      .catch(next)
+  })
 
 // Kevin: This would not work in the utility file, remember - SUBMIT HELP TICKET
 
