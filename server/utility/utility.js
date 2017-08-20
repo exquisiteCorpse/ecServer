@@ -4,30 +4,54 @@
  * @param corpsePath    path to corpseId's directory
  * @param appendValue   -append for vertical, +append for horizontal
  */
+const Promise = require('bluebird')
 const im = require('imagemagick')
 const fs = require('fs')
+const Bucket = 'exquisitecorpse-s3-001'
 const AWS = require('aws-sdk')
 AWS.config.loadFromPath('./config.json')
-const s3Bucket = new AWS.S3({params: {Bucket: 'exquisitecorpse-s3-001'}})
+const s3Bucket = new AWS.S3({params: {Bucket: Bucket}})
 
-const mergePhotos = (corpseId, corpsePath, appendValue = '-append') => {
+const mergePhotos = (files, appendValue = '-append') => {
   return new Promise((resolve, reject) => {
-
-    const corpse = {}
-    corpse.id = corpseId
-
-    corpse.top = s3Bucket.getObject({Bucket: s3Bucket.params.Bucket, Key: `${corpseId}-top.jpeg`})
-
-    corpse.middle = s3Bucket.getObject({Bucket: s3Bucket.params.Bucket, Key: `${corpseId}-middle.jpeg`})
-
-    corpse.bottom = s3Bucket.getObject({Bucket: s3Bucket.params.Bucket, Key: `${corpseId}-bottom.jpeg`})
-
+    const top = files[0].filename
+    const middle = files[1].filename
+    const bottom = files[2].filename
+    const id = top.slice(4).split('-')[0]
+    const corpseFile = `tmp/corpse-${id}.jpeg`
     const imagesToConvert = [appendValue,
-      `${corpsePath}/${corpseId}-top.jpg`,
-      `${corpsePath}/${corpseId}-middle.jpg`,
-      `${corpsePath}/${corpseId}-bottom.jpg`,
-      `${corpsePath}/ExquisiteCorpse.jpg`]
-    im.convert(imagesToConvert, (err, data) => {
+      `${top}`,
+      `${middle}`,
+      `${bottom}`,
+      `${corpseFile}`]
+    im.convert(imagesToConvert, (err) => {
+      if (err) reject(err)
+      else {
+        resolve({
+          Key: corpseFile.slice(4),
+          Body: fs.readFileSync(corpseFile),
+          ContentEncoding: 'base64',
+          ContentType: 'image/jpeg'
+        })
+      }
+    })
+  })
+}
+
+const getFromS3Bucket = (Key) => {
+  return new Promise((resolve, reject) => {
+    const params = {Bucket, Key}
+    s3Bucket.getObject(params, (err, data) => {
+      if (err) reject(err)
+      else resolve(data)
+    })
+  })
+}
+
+// photos and corpse api's use this
+const sendToS3Bucket = (data) => {
+  return new Promise((resolve, reject) => {
+    s3Bucket.putObject(data, (err) => {
       if (err) reject(err)
       else resolve(data)
     })
@@ -71,9 +95,9 @@ const createTmpFile = (fileName, fileData) => {
 
 const deleteTmpFile = (fileName) => {
   return new Promise((resolve, reject) => {
-    fs.unlink(fileName, (err, data) => {
+    fs.unlink(`tmp/${fileName}`, (err) => {
       if (err) reject(err)
-      else resolve(data)
+      else resolve(fileName)
     })
   })
 }
@@ -82,18 +106,18 @@ const getPhotoData = (filename) => {
   return new Promise((resolve, reject) => {
     fs.readFile(filename, (err, data) => {
       if (err) reject(err)
-      else resolve(data)
+      else resolve({data})
     })
   })
 }
 
-const sendToS3Bucket = (data) => {
-  return new Promise((resolve, reject) => {
-    s3Bucket.putObject(data, (err, data) => {
-      if (err) reject(err)
-      else resolve(data)
-    })
-  })
+module.exports = {
+  mergePhotos,
+  imIdentify,
+  imCrop,
+  sendToS3Bucket,
+  createTmpFile,
+  deleteTmpFile,
+  getPhotoData,
+  getFromS3Bucket
 }
-
-module.exports = {mergePhotos, imIdentify, imCrop, sendToS3Bucket, createTmpFile, deleteTmpFile, getPhotoData}

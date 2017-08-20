@@ -5,11 +5,11 @@
  */
 const router = require('express').Router()
 const {Corpse, Photo, User, Assignment, Like} = require('../db/models')
-module.exports = router
 const Sequelize = require('sequelize')
+module.exports = router
 const fs = require('fs')
 const publicCorpseDir = 'public/images'
-const {mergePhotos} = require('../utility/utility')
+const {mergePhotos, createTmpFile, deleteTmpFile, getFromS3Bucket, sendToS3Bucket} = require('../utility/utility')
 
 /**
  * Default columns
@@ -74,7 +74,6 @@ router.get('/', (req, res, next) => {
     .catch(next)
 })
 
-//not sure this is the best thing | we can change based on what comes up
 router.get('/display', (req, res, next) => {
   Corpse.findAll(
     {
@@ -106,14 +105,8 @@ router.get('/:corpseId', (req, res, next) => {
  */
 router.post('/', (req, res, next) => {
   Corpse.create(req.body)
-    .then(corpse => {
-      const corpseDir = `${publicCorpseDir}/${corpse.id}`
-      if (!fs.existsSync(publicCorpseDir)) fs.mkdirSync(publicCorpseDir)
-      fs.mkdirSync(corpseDir)
-      res.status(201).json(corpse)
-    })
+    .then(corpse => res.status(201).json(corpse))
     .catch(next)
-  // res.sendStatus(200)
 })
 
 /**
@@ -122,35 +115,46 @@ router.post('/', (req, res, next) => {
  * updates and existing corpse by its corpseId
  */
 router.put('/:corpseId', (req, res, next) => {
-  const corpsePath = `${publicCorpseDir}/${req.corpse.id}`
-  const {id} = req.corpse
   req.corpse.update(req.body)
     .then(corpse => {
       if (corpse.complete) {
-        mergePhotos(req.corpse.id, corpsePath, req.corpse.append)
-          .then(() => {
-            if (fs.existsSync(`${corpsePath}/${id}-top.jpg`)) {
-              fs.unlinkSync(`${corpsePath}/${id}-top.jpg`)
-            }
-            if (fs.existsSync(`${corpsePath}/${id}-middle.jpg`)) {
-              fs.unlinkSync(`${corpsePath}/${id}-middle.jpg`)
-            }
-            if (fs.existsSync(`${corpsePath}/${id}-bottom.jpg`)) {
-              fs.unlinkSync(`${corpsePath}/${id}-bottom.jpg`)
-            }
-            if (fs.existsSync(`${corpsePath}/${id}-top-edge.jpg`)) {
-              fs.unlinkSync(`${corpsePath}/${id}-top-edge.jpg`)
-            }
-            if (fs.existsSync(`${corpsePath}/${id}-middle-edge.jpg`)) {
-              fs.unlinkSync(`${corpsePath}/${id}-middle-edge.jpg`)
-            }
-            if (fs.existsSync(`${corpsePath}/${id}-bottom-edge.jpg`)) {
-              fs.unlinkSync(`${corpsePath}/${id}-bottom-edge.jpg`)
-            }
+        const data = {
+          id: req.corpse.id,
+          top: req.corpse.photos[0].imgUrl,
+          middle: req.corpse.photos[1].imgUrl,
+          bottom: req.corpse.photos[2].imgUrl,
+          topData: '',
+          middleData: '',
+          bottomData: '',
+          corpseFile: `corpse-${req.corpse.id}.jpeg`
+        }
+        Promise.all([
+          getFromS3Bucket(data.top),
+          getFromS3Bucket(data.middle),
+          getFromS3Bucket(data.bottom)])
+          .then(res => {
+            data.topData = res[0].Body
+            data.middleData = res[1].Body
+            data.bottomData = res[2].Body
+            return Promise.all([
+              createTmpFile(data.top, data.topData),
+              createTmpFile(data.middle, data.middleData),
+              createTmpFile(data.bottom, data.bottomData)
+            ])
           })
-        res.status(201).json(corpse)
+          .then(files => mergePhotos(files))
+          .then(data => sendToS3Bucket(data))
+          .then(() => {
+            return Promise.all([
+              deleteTmpFile(data.top),
+              deleteTmpFile(data.middle),
+              deleteTmpFile(data.bottom),
+              deleteTmpFile(data.corpseFile)
+            ])
+          })
       }
     })
+    .then(corpse => res.status(201).json(corpse))
     .catch(next)
 })
 
@@ -168,12 +172,3 @@ router.delete('/:corpseId', (req, res, next) => {
     .then(() => res.status(204).end())
     .catch(next)
 })
-
-// Kevin: This would not work in the utility file, remember - SUBMIT HELP TICKET
-
-/***
- * mergePhotos - creates the Corpse static image file
- * @param corpseId      corpseId
- * @param corpsePath    path to corpseId's directory
- * @param appendValue   -append for vertical, +append for horizontal
- */
