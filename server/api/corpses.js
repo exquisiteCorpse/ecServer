@@ -120,9 +120,9 @@ router.put('/:corpseId', (req, res, next) => {
       if (corpse.complete) {
         const data = {
           id: req.corpse.id,
-          top: req.corpse.id + '-1-top.jpeg',
-          middle: req.corpse.id + '-1-middle.jpeg',
-          bottom: req.corpse.id + '-1-bottom.jpeg',
+          top: req.corpse.photos[0].imgUrl,
+          middle: req.corpse.photos[1].imgUrl,
+          bottom: req.corpse.photos[2].imgUrl,
           topData: '',
           middleData: '',
           bottomData: '',
