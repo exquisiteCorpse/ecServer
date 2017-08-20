@@ -6,10 +6,9 @@
 const router = require('express').Router()
 const {Corpse, Photo, User, Assignment, Like} = require('../db/models')
 module.exports = router
-const Sequelize = require('sequelize')
 const fs = require('fs')
 const publicCorpseDir = 'public/images'
-const {mergePhotos, createTmpFile, getFromS3Bucket} = require('../utility/utility')
+const {mergePhotos, createTmpFile, deleteTmpFile, getFromS3Bucket, sendToS3Bucket} = require('../utility/utility')
 
 /**
  * Default columns
@@ -74,7 +73,6 @@ router.get('/', (req, res, next) => {
     .catch(next)
 })
 
-//not sure this is the best thing | we can change based on what comes up
 router.get('/display', (req, res, next) => {
   Corpse.findAll(
     {
@@ -118,17 +116,17 @@ router.post('/', (req, res, next) => {
 router.put('/:corpseId', (req, res, next) => {
   req.corpse.update(req.body)
     .then(corpse => {
-      if (!(corpse.complete)) {
+      if (corpse.complete) {
         const data = {
-          id: corpse.id,
+          id: req.corpse.id,
           top: '10-1-top.jpeg',
           middle: '10-1-middle.jpeg',
           bottom: '10-1-bottom.jpeg',
           topData: '',
           middleData: '',
-          bottomData: ''
+          bottomData: '',
+          corpseFile: `corpse-${req.corpse.id}.jpeg`
         }
-
         Promise.all([
           getFromS3Bucket(data.top),
           getFromS3Bucket(data.middle),
@@ -143,36 +141,33 @@ router.put('/:corpseId', (req, res, next) => {
               createTmpFile(data.bottom, data.bottomData)
             ])
           })
-          .then(files => {
-            console.log(files)
-            // mergePhotos(files)
+          .then(files => mergePhotos(files))
+          .then(data => sendToS3Bucket(data))
+          .then(() => {
+            return Promise.all([
+              deleteTmpFile(data.top),
+              deleteTmpFile(data.middle),
+              deleteTmpFile(data.bottom),
+              deleteTmpFile(data.corpseFile)
+            ])
           })
       }
-    .
-      then(res => res.status(201).json(res.data))
-        .catch(next)
     })
+    .then(corpse => res.status(201).json(corpse))
+    .catch(next)
+})
 
-  /**
-   * route /api/corpse/corpseId
-   * DEL
-   * deletes an existing corpse by its corpseId
-   */
-  router.delete('/:corpseId', (req, res, next) => {
-    const dirPath = `${publicCorpseDir}/${req.corpse.id}`
-    if (fs.existsSync(dirPath)) {
-      fs.rmdirSync(dirPath)
-    }
-    req.corpse.destroy()
-      .then(() => res.status(204).end())
-      .catch(next)
-  })
-
-// Kevin: This would not work in the utility file, remember - SUBMIT HELP TICKET
-
-/***
- * mergePhotos - creates the Corpse static image file
- * @param corpseId      corpseId
- * @param corpsePath    path to corpseId's directory
- * @param appendValue   -append for vertical, +append for horizontal
+/**
+ * route /api/corpse/corpseId
+ * DEL
+ * deletes an existing corpse by its corpseId
  */
+router.delete('/:corpseId', (req, res, next) => {
+  const dirPath = `${publicCorpseDir}/${req.corpse.id}`
+  if (fs.existsSync(dirPath)) {
+    fs.rmdirSync(dirPath)
+  }
+  req.corpse.destroy()
+    .then(() => res.status(204).end())
+    .catch(next)
+})

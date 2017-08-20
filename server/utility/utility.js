@@ -18,7 +18,7 @@ const mergePhotos = (files, appendValue = '-append') => {
     const middle = files[1].filename
     const bottom = files[2].filename
     const id = top.slice(4).split('-')[0]
-    const corpseFile = `tmp/ExquisiteCorpse${id}.jpg`
+    const corpseFile = `tmp/corpse-${id}.jpeg`
     const imagesToConvert = [appendValue,
       `${top}`,
       `${middle}`,
@@ -26,12 +26,17 @@ const mergePhotos = (files, appendValue = '-append') => {
       `${corpseFile}`]
     im.convert(imagesToConvert, (err) => {
       if (err) reject(err)
-      else resolve({filename: corpseFile})
+      else {
+        resolve({
+          Key: corpseFile.slice(4),
+          Body: fs.readFileSync(corpseFile),
+          ContentEncoding: 'base64',
+          ContentType: 'image/jpeg'
+        })
+      }
     })
   })
 }
-
-/******************************************************/
 
 const getFromS3Bucket = (Key) => {
   return new Promise((resolve, reject) => {
@@ -43,7 +48,7 @@ const getFromS3Bucket = (Key) => {
   })
 }
 
-/******************************************************/
+// photos and corpse api's use this
 const sendToS3Bucket = (data) => {
   return new Promise((resolve, reject) => {
     s3Bucket.putObject(data, (err) => {
@@ -105,7 +110,6 @@ const getPhotoData = (filename) => {
     })
   })
 }
-
 
 module.exports = {
   mergePhotos,
