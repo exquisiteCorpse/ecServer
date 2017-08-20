@@ -16,7 +16,6 @@ router.get('/:id', (req, res, next) => {
  * cell, corpseId, userId, encodedPhoto
  */
 router.post('/', (req, res, next) => {
-  console.log(req.body)
   const {cell, corpseId, userId, encodedPhoto} = req.body
   const basePhotoData = Buffer.from(encodedPhoto, 'base64')
   const photoFileName = `${corpseId}-${userId}-${cell}.jpeg`
@@ -29,26 +28,15 @@ router.post('/', (req, res, next) => {
     ContentType: 'image/jpeg'
   }
   sendToS3Bucket(data)
-    .then(res => res.data)
-    .catch(next)
-
-  // create edge
-  // 1. save data to tmp file
-  createTmpFile(`${photoFileName}`, basePhotoData)
+    .then(data => {
+      return createTmpFile(data.Key, data.Body)
+    })
     .then(res => imIdentify(res.filename))
     .then(res => imCrop(res))
+    .then(res => getPhotoData(res.edgeFileName))
     .then(res => {
-
-      // getPhotoData(res.edgeFileName)
-      //   .then(data => {
-      //     console.log(data)
-      //     return data
-      //   })
-      //   .catch(next)
-
-      const data = fs.readFileSync(res.edgeFileName)
-
-      const edgePhotoData = Buffer.from(data, 'base64')
+      console.log(res)
+      const edgePhotoData = Buffer.from(res.data, 'base64')
       return {
         Key: edgeFileName,
         Body: edgePhotoData,
@@ -57,22 +45,21 @@ router.post('/', (req, res, next) => {
       }
     })
     .then(edgePhoto => sendToS3Bucket(edgePhoto))
-    // .then(() => deleteTmpFile(photoFileName))
-    // .then(() => deleteTmpFile(edgeFileName))
-    .catch(next)
-
-  Photo.create({
-    imgUrl: photoFileName,
-    edgeUrl: edgeFileName,
-    cell,
-    corpseId,
-    userId
-  })
+    .then(data => deleteTmpFile(data.Key))
+    .then(data => deleteTmpFile(data.replace(/-edge/, '')))
+    .then(photoFileName => {
+      return Photo.create({
+        imgUrl: photoFileName,
+        edgeUrl: photoFileName.replace(/.jpeg/, '-edge.jpeg'),
+        cell,
+        corpseId,
+        userId
+      })
+    })
     .then(photo => {
       res.status(201).json(photo)
     })
     .catch(next)
-
 })
 
 router.put('/:id', (req, res, next) => {
@@ -84,14 +71,12 @@ router.put('/:id', (req, res, next) => {
 
 router.delete('/:id', (req, res, next) => {
   let {id} = req.params
+  // if time permits, delete photos on S3 Bucket
   Photo.findById(id)
     .then(photo => {
-      if (fs.existsSync(photo.imgUrl)) {
-        fs.unlink(photo.imgUrl)
-      }
-      if (fs.existsSync(photo.edgeUrl)) {
-        fs.unlink(photo.edgeUrl)
-      }
+      deleteTmpFile(photo.imgUrl)
+        .then(() => deleteTmpFile(photo.edgeUrl))
+        .catch(next)
       return photo
     })
     .then(photo => {
