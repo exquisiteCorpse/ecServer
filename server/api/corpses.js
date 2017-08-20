@@ -5,6 +5,7 @@
  */
 const router = require('express').Router()
 const {Corpse, Photo, User, Assignment, Like} = require('../db/models')
+const Sequelize = require('sequelize')
 module.exports = router
 const fs = require('fs')
 const publicCorpseDir = 'public/images'
@@ -119,9 +120,9 @@ router.put('/:corpseId', (req, res, next) => {
       if (corpse.complete) {
         const data = {
           id: req.corpse.id,
-          top: '10-1-top.jpeg',
-          middle: '10-1-middle.jpeg',
-          bottom: '10-1-bottom.jpeg',
+          top: req.corpse.id + '-1-top.jpeg',
+          middle: req.corpse.id + '-1-middle.jpeg',
+          bottom: req.corpse.id + '-1-bottom.jpeg',
           topData: '',
           middleData: '',
           bottomData: '',
