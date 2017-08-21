@@ -43,6 +43,16 @@ router.post('/', (req, res, next) => {
     .catch(next)
 })
 
+router.post('/fbUser', (req, res, next) => {
+  User.findOrCreate({where: {
+    username: req.body.name,
+    facebookId: req.body.id,
+    email: req.body.email
+  }})
+    .then(user => res.status(201).json(user))
+    .catch(next)
+})
+
 router.delete('/:userId', (req, res, next) => {
   req.user.destroy()
     .then(() => res.status(204).end())
