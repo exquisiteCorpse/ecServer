@@ -69,7 +69,7 @@ const imIdentify = (fileName) => {
 
 const imCrop = (fileObj) => {
   return new Promise((resolve, reject) => {
-    const edgeFileName = fileObj.fileName.split('.')[0] + '-edge.jpeg'
+    const edgeFileName = fileObj.fileName.replace(/.jpeg/, '-edge.jpeg')
     im.crop({
       srcPath: fileObj.fileName,
       dstPath: edgeFileName,
