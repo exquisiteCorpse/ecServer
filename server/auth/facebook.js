@@ -16,8 +16,6 @@ const strategy = new FacebookStrategy(facebookConfig, (token, refreshToken, prof
   const username = profile.displayName
   const email = profile.emails[0].value
 
-  console.log(profile)
-
   User.find({where: {facebookId}})
     .then(user => user
       ? done(null, user)
