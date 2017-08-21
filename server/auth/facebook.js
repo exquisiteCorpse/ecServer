@@ -1,35 +1,71 @@
 const passport = require('passport')
 const router = require('express').Router()
-const FacebookStrategy = require('passport-facebook').Strategy
-const {User} = require('../db/models')
+const FacebookStrategy = require('passport-facebook')
+const { User } = require('../db/models')
 module.exports = router
 
+// const transformFacebookProfile = (profile) => ({
+//   name: profile.name,
+//   avatar: profile.picture.data.url
+// })
+
 const facebookConfig = {
-  clientID: process.env.FACEBOOK_CLIENT_ID,
-  clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+  clientID: process.env.FACEBOOK_APP_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
   callbackURL: process.env.FACEBOOK_CALLBACK,
-  profileFields: ['id', 'email', 'displayName', 'name', 'picture']
+  profileFields: ['id', 'name', 'displayName', 'picture', 'email']
 }
 
-const strategy = new FacebookStrategy(facebookConfig, (token, refreshToken, profile, done) => {
-  const facebookId = profile.id
-  const username = profile.displayName
-  const email = profile.emails[0].value
+// Register Facebook Passport strategy
 
-  User.find({where: {facebookId}})
-    .then(user => user
-      ? done(null, user)
-      : User.create({username, email, facebookId})
-        .then(user => done(null, user))
-    )
-    .catch(done)
-})
 
-passport.use(strategy)
+passport.use(
+  new FacebookStrategy(
+    facebookConfig,
+    (accessToken, refreshToken, profile, done) => {
+      User.findOrCreate({
+        where: { // change these fields depending on what you're actually storing!
+          username: profile._json.name,
+          avatar: profile._json.picture.data.url,
+          facebookId: profile.id
 
-router.get('/', passport.authenticate('facebook', {scope: ['email']}))
+        }
+      })
+        .spread((user) => done(null, user))
+        .catch(done)
+    }
+  )
+)
 
-router.get('/callback', passport.authenticate('facebook', {
-  successRedirect: '/home',
-  failureRedirect: '/login'
-}))
+// Set up Facebook auth routes
+
+router.get('/', passport.authenticate('facebook'))
+
+router.get('/callback',
+  passport.authenticate('facebook', { failureRedirect: '/' }),
+  // Redirect user back to the mobile app using Linking with a custom protocol OAuthLogin
+  (req, res) => res.redirect('OAuthLogin://login?user=' + JSON.stringify(req.user)))
+
+
+
+
+  // const strategy = new FacebookStrategy(facebookConfig,
+//   // async
+//   (accessToken, refreshToken, profile, done) => {
+//     const facebookId = profile.id
+//     const username = profile.displayName
+//     const email = profile.emails[0].value
+
+//     User.find({where: {facebookId}})
+//       .then(user => user
+//         ? done(null, user)
+//         : User.create({username, email, facebookId})
+//           .then(user => done(null, user))
+//       )
+//       .catch(done)
+
+//     done(null, transformFacebookProfile(profile._json))
+//   })
+
+// passport.use(strategy)
+
