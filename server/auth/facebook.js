@@ -1,8 +1,8 @@
 const passport = require('passport')
-const app = require('express').Router()
+const router = require('express').Router()
 const FacebookStrategy = require('passport-facebook')
 const { User } = require('../db/models')
-module.exports = app
+module.exports = router
 
 const transformFacebookProfile = (profile) => ({
   name: profile.name,
@@ -38,16 +38,11 @@ const strategy = new FacebookStrategy(facebook,
 
 passport.use(strategy)
 
-passport.serializeUser((user, done) => done(null, user))
-passport.deserializeUser((user, done) => done(null, user))
-app.use(passport.initialize())
-app.use(passport.session())
-
 // Set up Facebook auth routes
 
-app.get('/', passport.authenticate('facebook'))
+router.get('/mobile', passport.authenticate('facebook'))
 
-app.get('/callback',
-  passport.authenticate('facebook', { failureRedirect: '/' }),
+router.get('/mobile/callback',
+  passport.authenticate('facebook', { failureRedirect: '/mobile' }),
   // Redirect user back to the mobile app using Linking with a custom protocol OAuthLogin
   (req, res) => res.redirect('ecMobileApp://login?user=' + JSON.stringify(req.user)))
