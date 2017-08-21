@@ -4,39 +4,38 @@ const FacebookStrategy = require('passport-facebook')
 const { User } = require('../db/models')
 module.exports = router
 
-const transformFacebookProfile = (profile) => ({
-  name: profile.name,
-  avatar: profile.picture.data.url
-})
+// const transformFacebookProfile = (profile) => ({
+//   name: profile.name,
+//   avatar: profile.picture.data.url
+// })
 
-const facebook = {
-  clientID: process.env.FACEBOOK_CLIENT_ID,
-  clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+const facebookConfig = {
+  clientID: process.env.FACEBOOK_APP_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
   callbackURL: process.env.FACEBOOK_CALLBACK,
-  profileFields: process.env.FACEBOOK_PROFILE_FIELDS
+  profileFields: ['id', 'name', 'displayName', 'picture', 'email']
 }
 
 // Register Facebook Passport strategy
 
-const strategy = new FacebookStrategy(facebook,
-  // async
-  (accessToken, refreshToken, profile, done) => {
-    const facebookId = profile.id
-    const username = profile.displayName
-    const email = profile.emails[0].value
 
-    User.find({where: {facebookId}})
-      .then(user => user
-        ? done(null, user)
-        : User.create({username, email, facebookId})
-          .then(user => done(null, user))
-      )
-      .catch(done)
+passport.use(
+  new FacebookStrategy(
+    facebookConfig,
+    (accessToken, refreshToken, profile, done) => {
+      User.findOrCreate({
+        where: { // change these fields depending on what you're actually storing!
+          username: profile._json.name,
+          avatar: profile._json.picture.data.url,
+          facebookId: profile.id
 
-    done(null, transformFacebookProfile(profile._json))
-  })
-
-passport.use(strategy)
+        }
+      })
+        .spread((user) => done(null, user))
+        .catch(done)
+    }
+  )
+)
 
 // Set up Facebook auth routes
 
@@ -46,3 +45,26 @@ router.get('/callback',
   passport.authenticate('facebook', { failureRedirect: '/' }),
   // Redirect user back to the mobile app using Linking with a custom protocol OAuthLogin
   (req, res) => res.redirect('OAuthLogin://login?user=' + JSON.stringify(req.user)))
+
+
+
+
+  // const strategy = new FacebookStrategy(facebookConfig,
+//   // async
+//   (accessToken, refreshToken, profile, done) => {
+//     const facebookId = profile.id
+//     const username = profile.displayName
+//     const email = profile.emails[0].value
+
+//     User.find({where: {facebookId}})
+//       .then(user => user
+//         ? done(null, user)
+//         : User.create({username, email, facebookId})
+//           .then(user => done(null, user))
+//       )
+//       .catch(done)
+
+//     done(null, transformFacebookProfile(profile._json))
+//   })
+
+// passport.use(strategy)
