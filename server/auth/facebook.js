@@ -40,9 +40,9 @@ passport.use(strategy)
 
 // Set up Facebook auth routes
 
-router.get('/mobile', passport.authenticate('facebook'))
+router.get('/', passport.authenticate('facebook'))
 
-router.get('/mobile/callback',
-  passport.authenticate('facebook', { failureRedirect: '/mobile' }),
+router.get('/callback',
+  passport.authenticate('facebook', { failureRedirect: '/' }),
   // Redirect user back to the mobile app using Linking with a custom protocol OAuthLogin
   (req, res) => res.redirect('ecMobileApp://login?user=' + JSON.stringify(req.user)))
