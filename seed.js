@@ -2,27 +2,29 @@ const db = require('./server/db/index')
 let Promise = require('bluebird')
 
 const _users =  [
-  { 'username' : 'shayne',
-    'password' : '12345',
-    'email' : 'shayne@ecorp.com'
-  },
   {
-    'username' : 'lina',
-    'password' : '12345',
-    'email' : 'lina@ecorp.com'
+    "facebookId" : "106154976783622",
+    "username" : "Barbara Bozo",
+    "email" : "barbara_iqpskbq_bozo@tfbnw.net",
 
   },
   {
-    'username' : 'fara',
-    'password' : '12345',
-    'email' : 'fara@ecorp.com'
+    "facebookId" : "112484276147516",
+    "username" : "Joe Laustein",
+    "email" : "joe_rnufumq_laustein@tfbnw.net",
   },
   {
-    'username' : 'kevin',
-    'password' : '12345',
-    'email' : 'kevin@ecorp.com'
+    "facebookId" : "112048849524675",
+    "username" : "Margaret Cho",
+    "email" : "margaret_wjvdqka_cho@tfbnw.net",
+  },
+  {
+    "facebookId" : "108559403209100",
+    "username" : "Leroy Jenkins",
+    "email" : "leroy_krlrckx_jenkins@tfbnw.net",
   },
 ]
+
 
 
 const _Friend = [
