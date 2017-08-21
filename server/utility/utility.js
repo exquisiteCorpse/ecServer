@@ -18,7 +18,7 @@ const mergePhotos = (files, appendValue = '-append') => {
     const middle = files[1].filename
     const bottom = files[2].filename
     const id = top.slice(4).split('-')[0]
-    const corpseFile = `tmp/corpse-${id}.jpeg`
+    const corpseFile = `./tmp/corpse-${id}.jpeg`
     const imagesToConvert = [appendValue,
       `${top}`,
       `${middle}`,
@@ -86,16 +86,16 @@ const imCrop = (fileObj) => {
 
 const createTmpFile = (fileName, fileData) => {
   return new Promise((resolve, reject) => {
-    fs.writeFile(`tmp/${fileName}`, fileData, (err) => {
+    fs.writeFile(`./tmp/${fileName}`, fileData, (err) => {
       if (err) reject(err)
-      else resolve({filename: `tmp/${fileName}`})
+      else resolve({filename: `./tmp/${fileName}`})
     })
   })
 }
 
 const deleteTmpFile = (fileName) => {
   return new Promise((resolve, reject) => {
-    fs.unlink(`tmp/${fileName}`, (err) => {
+    fs.unlink(`./tmp/${fileName}`, (err) => {
       if (err) reject(err)
       else resolve(fileName)
     })
