@@ -45,4 +45,4 @@ router.get('/', passport.authenticate('facebook'))
 router.get('/callback',
   passport.authenticate('facebook', { failureRedirect: '/' }),
   // Redirect user back to the mobile app using Linking with a custom protocol OAuthLogin
-  (req, res) => res.redirect('ecMobileApp://login?user=' + JSON.stringify(req.user)))
+  (req, res) => res.redirect('OAuthLogin://login?user=' + JSON.stringify(req.user)))
