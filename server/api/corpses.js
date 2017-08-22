@@ -44,7 +44,7 @@ router.param('corpseId', (req, res, next, id) => {
   Corpse.findById(id,
     {
       include: [
-        {model: Photo},
+        { model: Photo, include: [{model: User, attributes: ['username']}]},
         {model: Assignment},
         {model: User, attributes: ['id', 'username', 'email']},
         {model: Like, attributes: ['id', 'userId']}
