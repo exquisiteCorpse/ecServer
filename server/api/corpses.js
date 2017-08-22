@@ -48,7 +48,8 @@ router.param('corpseId', (req, res, next, id) => {
         {model: Assignment},
         {model: User, attributes: ['id', 'username', 'email']},
         {model: Like, attributes: ['id', 'userId']}
-      ]
+      ],
+      order: [ [ Photo, 'id', 'ASC'] ]
     })
     .then(corpse => {
       if (!corpse) {
