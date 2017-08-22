@@ -7,6 +7,7 @@ import Routes from './routes'
 
 // establishes socket connection
 import './socket'
+import 'bootstrap/dist/css/bootstrap.css'
 
 ReactDOM.render(
   <Provider store={store}>

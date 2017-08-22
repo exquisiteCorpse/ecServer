@@ -1,0 +1,9 @@
+.header {
+    /*font-family: 'Satisfy', cursive;*/
+    font-family: 'Amatica SC', cursive;
+    font-size: 6em;
+}
+
+.navbar .navbar-collapse {
+    text-align: center;
+}
