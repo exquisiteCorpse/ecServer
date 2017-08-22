@@ -17,8 +17,8 @@ const mergePhotos = (files, appendValue = '-append') => {
     const top = files[0].filename
     const middle = files[1].filename
     const bottom = files[2].filename
-    const id = top.split('-')[0]
-    const corpseFile = `./tmp/corpse-${id}.jpeg`
+    const id = top.split('-')[0].slice(6)
+    const corpseFile = `tmp/corpse-${id}.jpeg`
     const imagesToConvert = [appendValue,
       `${top}`,
       `${middle}`,
