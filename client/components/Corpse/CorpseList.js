@@ -8,7 +8,7 @@ const CorpseItem = (props) => {
   return (
     <div>
       {
-        corpses
+        corpses.length && corpses
           .filter(corpse => corpse.complete)
           .map(corpse => {
             // TODO: This should be in CorpseItem component!

@@ -4,6 +4,7 @@
  * @param corpsePath    path to corpseId's directory
  * @param appendValue   -append for vertical, +append for horizontal
  */
+const PIXEL_HEIGHT = 75
 const Promise = require('bluebird')
 const im = require('imagemagick')
 const fs = require('fs')
@@ -67,16 +68,16 @@ const imIdentify = (fileName) => {
   })
 }
 
-const imCrop = (fileObj) => {
+const imCrop = (fileObj, gravity = 'South') => {
   return new Promise((resolve, reject) => {
     const edgeFileName = fileObj.fileName.replace(/.jpeg/, '-edge.jpeg')
     im.crop({
       srcPath: fileObj.fileName,
       dstPath: edgeFileName,
       width: fileObj.data.width,
-      height: 75,
+      height: PIXEL_HEIGHT,
       quality: 1,
-      gravity: 'South'
+      gravity: gravity
     }, (err, data) => {
       if (err) reject(err)
       else resolve({edgeFileName})

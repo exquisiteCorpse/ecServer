@@ -146,6 +146,10 @@ router.put('/:corpseId', (req, res, next) => {
           .then(files => mergePhotos(files))
           .then(data => sendToS3Bucket(data))
           .then(() => {
+            // console.log('---------- EMITTING NEW CORPSE----------')
+            // console.log(corpse)
+            // socket.emit('new-corpse', newCorpse)
+
             return Promise.all([
               deleteTmpFile(data.top),
               deleteTmpFile(data.middle),
