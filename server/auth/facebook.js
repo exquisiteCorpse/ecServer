@@ -25,10 +25,9 @@ passport.use(
     (accessToken, refreshToken, profile, done) => {
       User.findOrCreate({
         where: { // change these fields depending on what you're actually storing!
-          username: profile._json.name,
-          avatar: profile._json.picture.data.url,
-          facebookId: profile.id
-
+          username: profile.displayName,
+          facebookId: profile.id,
+          email: profile.emails[0].value
         }
       })
         .spread((user) => done(null, user))
