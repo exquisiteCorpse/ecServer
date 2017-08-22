@@ -11,9 +11,9 @@ const CorpseItem = (props) => {
         corpses
           .filter(corpse => corpse.complete)
           .map(corpse => {
+            // TODO: This should be in CorpseItem component!
           const image = `https://s3.amazonaws.com/exquisitecorpse-s3-001/corpse-${corpse.id}.jpeg`
           return (
-            // TODO: This should be CorpseItem component
             <div key={corpse.id}>
               {corpse.title}
               <img src={image} width="400"/>
