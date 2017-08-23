@@ -16,10 +16,10 @@ const PHOTO_EDGE_HEIGHT = 150
 
 const mergePhotos = (files, appendValue = '-append') => {
   return new Promise((resolve, reject) => {
-    const top = files[0].filename
-    const middle = files[1].filename
-    const bottom = files[2].filename
-    const id = top.split('-')[0].slice(6)
+    const top = `tmp/ORIGINAL-${files[0].filename}`
+    const middle = `tmp/ORIGINAL-${files[1].filename}`
+    const bottom = `tmp/ORIGINAL-${files[2].filename}`
+    const id = files[0].filename.split('-')[0]
     const corpseFile = `tmp/corpse-${id}.jpeg`
     const imagesToConvert = [appendValue,
       `${top}`,
@@ -41,6 +41,7 @@ const mergePhotos = (files, appendValue = '-append') => {
 }
 
 const getFromS3Bucket = (Key) => {
+  console.log(`-- S3 GET\t${Key}`)
   return new Promise((resolve, reject) => {
     const params = {Bucket, Key}
     s3Bucket.getObject(params, (err, data) => {
@@ -52,7 +53,7 @@ const getFromS3Bucket = (Key) => {
 
 // photos and corpse api's use this
 const sendToS3Bucket = (data) => {
-  console.log(`-- S3 xfer\t${data.Key}` )
+  console.log(`-- S3 PUT\t${data.Key}` )
   return new Promise((resolve, reject) => {
     s3Bucket.putObject(data, (err) => {
       if (err) reject(err)

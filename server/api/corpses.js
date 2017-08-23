@@ -147,9 +147,9 @@ router.put('/:corpseId', (req, res, next) => {
           .then(data => sendToS3Bucket(data))
           .then(() => {
             return Promise.all([
-              deleteTmpFile(data.top),
-              deleteTmpFile(data.middle),
-              deleteTmpFile(data.bottom),
+              deleteTmpFile(`ORIGINAL-${data.top}`),
+              deleteTmpFile(`ORIGINAL-${data.middle}`),
+              deleteTmpFile(`ORIGINAL-${data.bottom}`),
               deleteTmpFile(data.corpseFile)
             ])
           })
