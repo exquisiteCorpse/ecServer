@@ -1,8 +1,10 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { withRouter, Link } from 'react-router-dom'
-import { logout } from '../store'
+import {connect} from 'react-redux'
+import {withRouter, Link} from 'react-router-dom'
+import {logout} from '../store'
+import CorpseList from '../components/Corpse/CorpseList'
+
 
 /**
  * COMPONENT
@@ -12,37 +14,22 @@ import { logout } from '../store'
  */
 export class Main extends Component {
 
-  responseFacebook (response) {
-    console.log(response)
-  }
-  render () {
+  render() {
 
-    const { children, handleClick, isLoggedIn } = this.props
-    const facebookcli = process.env.FACEBOOK_CLIENT_ID
+    const {children, handleClick, isLoggedIn} = this.props
     return (
-      <div>
-        <h1>Exquisite Corpse</h1>
-        <nav>
-          {
-            isLoggedIn
-              ? <div>
-                {/* The navbar will show these links after you log in */}
-                <Link to="/home">Home</Link>
-                <a href="#" onClick={handleClick}>Logout</a>
-              </div>
-              : <div>
-                {/* The navbar will show these links before you log in */}
-                <Link to="/login">Login</Link>
-                <Link to="/signup">Sign Up</Link>
-              </div>
-          }
-        </nav>
-        <hr />
-        {children}
+      <div className="container">
+        <div className="navbar navbar-expand-lg navbar-light bgg-light">
+          <span className="navbar-brand header"><h1>Exquisite Corpse</h1></span>
+        </div>
+        <div className="col-xs-2 col-xs-offset-5">
+          <CorpseList/>
+        </div>
       </div>
     )
   }
 }
+
 /**
  * CONTAINER
  */
