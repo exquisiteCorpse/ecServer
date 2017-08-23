@@ -14,7 +14,7 @@ const {mergePhotos, createTmpFile, deleteTmpFile, getFromS3Bucket, sendToS3Bucke
 /**
  * Default columns
  */
-const attributesToReturn = {attributes: ['id', 'title', 'totalCells', 'complete']}
+const attributesToReturn = {order: [['id', 'DESC']], attributes: ['id', 'title', 'totalCells', 'complete']}
 
 function isLoggedIn(req, res, next) {
   if (req.user) {
@@ -43,13 +43,13 @@ function isAdmin(req, res, next) {
 router.param('corpseId', (req, res, next, id) => {
   Corpse.findById(id,
     {
+      order: [[Photo, 'id', 'ASC']],
       include: [
-        {model: Photo},
+        {model: Photo, include: [{model: User, attributes: ['username']}]},
         {model: Assignment},
         {model: User, attributes: ['id', 'username', 'email']},
         {model: Like, attributes: ['id', 'userId']}
-      ],
-      order: [ [ Photo, 'id', 'ASC'] ]
+      ]
     })
     .then(corpse => {
       if (!corpse) {
@@ -146,6 +146,10 @@ router.put('/:corpseId', (req, res, next) => {
           .then(files => mergePhotos(files))
           .then(data => sendToS3Bucket(data))
           .then(() => {
+            // console.log('---------- EMITTING NEW CORPSE----------')
+            // console.log(corpse)
+            // socket.emit('new-corpse', newCorpse)
+
             return Promise.all([
               deleteTmpFile(`ORIGINAL-${data.top}`),
               deleteTmpFile(`ORIGINAL-${data.middle}`),

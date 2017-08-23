@@ -4,6 +4,7 @@
  * @param corpsePath    path to corpseId's directory
  * @param appendValue   -append for vertical, +append for horizontal
  */
+const PIXEL_HEIGHT = 75
 const Promise = require('bluebird')
 const im = require('imagemagick')
 const fs = require('fs')
