@@ -18,7 +18,6 @@ const facebookConfig = {
 
 // Register Facebook Passport strategy
 
-
 passport.use(
   new FacebookStrategy(
     facebookConfig,
@@ -38,33 +37,9 @@ passport.use(
 
 // Set up Facebook auth routes
 
-router.get('/', passport.authenticate('facebook'))
+router.get('/', passport.authenticate('facebook', {scope: ['email']}))
 
-router.get('/callback',
-  passport.authenticate('facebook', { failureRedirect: '/' }),
-  // Redirect user back to the mobile app using Linking with a custom protocol OAuthLogin
-  (req, res) => res.redirect('OAuthLogin://login?user=' + JSON.stringify(req.user)))
-
-
-
-
-  // const strategy = new FacebookStrategy(facebookConfig,
-//   // async
-//   (accessToken, refreshToken, profile, done) => {
-//     const facebookId = profile.id
-//     const username = profile.displayName
-//     const email = profile.emails[0].value
-
-//     User.find({where: {facebookId}})
-//       .then(user => user
-//         ? done(null, user)
-//         : User.create({username, email, facebookId})
-//           .then(user => done(null, user))
-//       )
-//       .catch(done)
-
-//     done(null, transformFacebookProfile(profile._json))
-//   })
-
-// passport.use(strategy)
-
+router.get('/callback', passport.authenticate('facebook', {
+  successRedirect: '/home',
+  failureRedirect: '/login'
+}))

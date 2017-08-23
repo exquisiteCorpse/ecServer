@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withRouter, Link } from 'react-router-dom'
 import { logout } from '../store'
-import FacebookLogin from 'react-facebook-login'
+
 /**
  * COMPONENT
  *  The Main component is our 'picture frame' - it displays the navbar and anything
@@ -34,13 +34,6 @@ export class Main extends Component {
                 {/* The navbar will show these links before you log in */}
                 <Link to="/login">Login</Link>
                 <Link to="/signup">Sign Up</Link>
-                <FacebookLogin
-                  appId={facebookcli}
-                  autoLoad={true}
-                  fields="name,email,picture"
-                  scope="public_profile,user_friends,user_actions.books"
-                  callback={this.responseFacebook}
-                />
               </div>
           }
         </nav>
