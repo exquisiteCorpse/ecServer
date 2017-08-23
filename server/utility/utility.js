@@ -11,6 +11,8 @@ const Bucket = 'exquisitecorpse-s3-001'
 const AWS = require('aws-sdk')
 AWS.config.loadFromPath('./config.json')
 const s3Bucket = new AWS.S3({params: {Bucket: Bucket}})
+const PHOTO_HEIGHT = 215
+const PHOTO_EDGE_HEIGHT = 150
 
 const mergePhotos = (files, appendValue = '-append') => {
   return new Promise((resolve, reject) => {
@@ -50,63 +52,74 @@ const getFromS3Bucket = (Key) => {
 
 // photos and corpse api's use this
 const sendToS3Bucket = (data) => {
+  console.log(`-- S3 xfer\t${data.Key}` )
   return new Promise((resolve, reject) => {
     s3Bucket.putObject(data, (err) => {
       if (err) reject(err)
-      else resolve(data)
+      else resolve({filename: data.Key})
     })
   })
 }
 
-const imIdentify = (fileName) => {
+const imIdentify = (fileName, edge = false) => {
+  const prefix = edge ? 'tmp/' : 'tmp/ORIGINAL-'
+  console.log(`-- Identifying\t${prefix}${fileName}` )
   return new Promise((resolve, reject) => {
-    im.identify(fileName, (err, data) => {
+    im.identify(`${prefix}${fileName}`, (err, data) => {
       if (err) reject(err)
       else resolve({data, fileName})
     })
   })
 }
 
-const imCrop = (fileObj) => {
+const imCrop = (fileObj, edge = false) => {
+  const prefix = edge ? 'tmp/' : 'tmp/ORIGINAL-'
+  console.log(`-- Cropping\t${prefix}${fileObj.fileName}` )
   return new Promise((resolve, reject) => {
-    const edgeFileName = fileObj.fileName.replace(/.jpeg/, '-edge.jpeg')
-    im.crop({
-      srcPath: fileObj.fileName,
-      dstPath: edgeFileName,
-      width: fileObj.data.width,
-      height: 75,
-      quality: 1,
-      gravity: 'South'
-    }, (err, data) => {
+    let srcPath, dstPath, width, height, gravity
+    if (edge) {
+      srcPath = `${prefix}${fileObj.fileName}`
+      dstPath = `tmp/${fileObj.fileName.replace(/.jpeg/, '-edge.jpeg')}`
+      height = PHOTO_EDGE_HEIGHT
+    } else {
+      srcPath = `${prefix}${fileObj.fileName}`
+      dstPath = `tmp/${fileObj.fileName}`
+      height = PHOTO_HEIGHT
+    }
+    gravity = 'South'
+    width = fileObj.data.width
+    im.crop({srcPath, dstPath, width, height, quality: 1, gravity}, (err) => {
       if (err) reject(err)
-      else resolve({edgeFileName})
+      else resolve({filename: dstPath.replace(/^tmp\//, '')})
     })
   })
 }
 
 const createTmpFile = (fileName, fileData) => {
   return new Promise((resolve, reject) => {
-    fs.writeFile(`./tmp/${fileName}`, fileData, (err) => {
+    fs.writeFile(`tmp/ORIGINAL-${fileName}`, fileData, (err) => {
       if (err) reject(err)
-      else resolve({filename: `./tmp/${fileName}`})
+      else resolve({filename: fileName})
     })
   })
 }
 
-const deleteTmpFile = (fileName) => {
+const deleteTmpFile = (filename) => {
+  console.log(`-- Deleting\ttmp/${filename}` )
   return new Promise((resolve, reject) => {
-    fs.unlink(`./tmp/${fileName}`, (err) => {
+    fs.unlink(`tmp/${filename}`, (err) => {
       if (err) reject(err)
-      else resolve(fileName)
+      else resolve({filename})
     })
   })
 }
 
 const getPhotoData = (filename) => {
+  console.log(`-- Cropping\ttmp/${filename}` )
   return new Promise((resolve, reject) => {
-    fs.readFile(filename, (err, data) => {
+    fs.readFile(`tmp/${filename}`, (err, data) => {
       if (err) reject(err)
-      else resolve({data})
+      else resolve({data, filename})
     })
   })
 }
