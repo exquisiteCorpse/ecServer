@@ -82,12 +82,13 @@ const imCrop = (fileObj, edge = false) => {
       srcPath = `${prefix}${fileObj.fileName}`
       dstPath = `tmp/${fileObj.fileName.replace(/.jpeg/, '-edge.jpeg')}`
       height = PHOTO_EDGE_HEIGHT
+      gravity = 'South'
     } else {
       srcPath = `${prefix}${fileObj.fileName}`
       dstPath = `tmp/${fileObj.fileName}`
       height = PHOTO_HEIGHT
+      gravity = 'North'
     }
-    gravity = 'South'
     width = fileObj.data.width
     im.crop({srcPath, dstPath, width, height, quality: 1, gravity}, (err) => {
       if (err) reject(err)
