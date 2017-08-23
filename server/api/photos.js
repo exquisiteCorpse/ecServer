@@ -2,8 +2,10 @@ const router = require('express').Router()
 const {Photo} = require('../db/models')
 module.exports = router
 const fs = require('fs')
-const tmpDir = '/tmp'
-const {imIdentify, imCrop, sendToS3Bucket, createTmpFile, deleteTmpFile, getPhotoData} = require('../utility/utility')
+const {
+  imIdentify, imCrop, imCropRemoveMask, sendToS3Bucket,
+  createTmpFile, deleteTmpFile, getPhotoData, renameFile
+} = require('../utility/utility')
 
 router.get('/:id', (req, res, next) => {
   const {id} = req.params
@@ -17,49 +19,57 @@ router.get('/:id', (req, res, next) => {
  */
 router.post('/', (req, res, next) => {
   const {cell, corpseId, userId, encodedPhoto} = req.body
-  const basePhotoData = Buffer.from(encodedPhoto, 'base64')
   const photoFileName = `${corpseId}-${userId}-${cell}.jpeg`
-  const edgeFileName = `${corpseId}-${userId}-${cell}-edge.jpeg`
+  const ContentEncoding = 'base64'
+  const ContentType = 'image/jpeg'
 
-  const data = {
-    Key: photoFileName,
-    Body: basePhotoData,
-    ContentEncoding: 'base64',
-    ContentType: 'image/jpeg'
-  }
-  sendToS3Bucket(data)
-    .then(data => {
-      return createTmpFile(data.Key, data.Body)
-    })
-    .then(res => imIdentify(res.filename))
-    .then(res => imCrop(res))
-    .then(res => getPhotoData(res.edgeFileName))
-    .then(res => {
-      console.log(res)
-      const edgePhotoData = Buffer.from(res.data, 'base64')
-      return {
-        Key: edgeFileName,
-        Body: edgePhotoData,
-        ContentEncoding: 'base64',
-        ContentType: 'image/jpeg'
-      }
-    })
-    .then(edgePhoto => sendToS3Bucket(edgePhoto))
-    .then(data => deleteTmpFile(data.Key))
-    .then(data => deleteTmpFile(data.replace(/-edge/, '')))
-    .then(photoFileName => {
-      return Photo.create({
-        imgUrl: photoFileName,
-        edgeUrl: photoFileName.replace(/.jpeg/, '-edge.jpeg'),
-        cell,
-        corpseId,
-        userId
+  if (cell === 'top') {
+    createTmpFile(photoFileName, Buffer.from(encodedPhoto, 'base64'))
+      .then(data => imIdentify(data.filename, false))
+      .then(data => imCrop(data, false))
+      .then(data => getPhotoData(data.filename))
+      .then(data => sendToS3Bucket({Key: data.filename, Body: data.data, ContentEncoding, ContentType}))
+      .then(data => imIdentify(data.filename, true))
+      .then(data => imCrop(data, true))
+      .then(data => getPhotoData(data.filename))
+      .then(data => sendToS3Bucket({Key: data.filename, Body: data.data, ContentEncoding, ContentType}))
+      .then(data => {
+        const imgUrl = data.filename.replace(/-edge/, '')
+        const edgeUrl = data.filename
+        console.log(`-- PhotoDB\timgUrl: ${imgUrl}\n\t\tedgeUrl: ${edgeUrl}`)
+        return Photo.create({imgUrl, edgeUrl, cell, corpseId, userId})
       })
-    })
-    .then(photo => {
-      res.status(201).json(photo)
-    })
-    .catch(next)
+      .then(photo => res.status(201).json(photo))
+      .then(() => deleteTmpFile(`ORIGINAL-${photoFileName}`))
+      .then(data => deleteTmpFile(data.filename.replace(/^ORIGINAL-/, '')))
+      .then(data => deleteTmpFile(data.filename.replace(/.jpeg/, '-edge.jpeg')))
+      .catch(next)
+  } else {
+    createTmpFile(photoFileName, Buffer.from(encodedPhoto, 'base64'))
+      .then(data => imIdentify(data.filename, false))
+      .then(data => imCropRemoveMask(data, false))
+      .then(data => deleteTmpFile(data.filename.replace(/UNMASKED-/, 'ORIGINAL-')))
+      .then(data => renameFile(data.filename.replace(/ORIGINAL-/, 'UNMASKED-'), data.filename))
+      .then(data => imIdentify(data.filename, false))
+      .then(data => imCrop(data, false))
+      .then(data => getPhotoData(data.filename))
+      .then(data => sendToS3Bucket({Key: data.filename, Body: data.data, ContentEncoding, ContentType}))
+      .then(data => imIdentify(data.filename, true))
+      .then(data => imCrop(data, true))
+      .then(data => getPhotoData(data.filename))
+      .then(data => sendToS3Bucket({Key: data.filename, Body: data.data, ContentEncoding, ContentType}))
+      .then(data => {
+        const imgUrl = data.filename.replace(/-edge/, '')
+        const edgeUrl = data.filename
+        console.log(`-- PhotoDB\timgUrl: ${imgUrl}\n\t\tedgeUrl: ${edgeUrl}`)
+        return Photo.create({imgUrl, edgeUrl, cell, corpseId, userId})
+      })
+      .then(photo => res.status(201).json(photo))
+      .then(() => deleteTmpFile(`ORIGINAL-${photoFileName}`))
+      .then(data => deleteTmpFile(data.filename.replace(/^ORIGINAL-/, '')))
+      .then(data => deleteTmpFile(data.filename.replace(/.jpeg/, '-edge.jpeg')))
+      .catch(next)
+  }
 })
 
 router.put('/:id', (req, res, next) => {
