@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
 import {logout} from '../store'
+import NavbarContainer from './Navigation/NavbarContainer'
 import CorpseList from '../components/Corpse/CorpseList'
-
 
 /**
  * COMPONENT
@@ -13,18 +13,13 @@ import CorpseList from '../components/Corpse/CorpseList'
  *  rendered out by the component's `children`.
  */
 export class Main extends Component {
-
-  render() {
-
-    const {children, handleClick, isLoggedIn} = this.props
+  render () {
+    // const {children, handleClick, isLoggedIn} = this.props
     return (
-      <div className="container">
-        <div className="navbar navbar-expand-lg navbar-light bgg-light">
-          <span className="navbar-brand header"><h1>Exquisite Corpse</h1></span>
-        </div>
-        <div className="col-xs-2 col-xs-offset-5">
-          <CorpseList/>
-        </div>
+      <div id='main'>
+        <NavbarContainer />
+        <h1>Exquisite Corpse</h1>
+        <CorpseList />
       </div>
     )
   }
@@ -41,7 +36,7 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    handleClick() {
+    handleClick () {
       dispatch(logout())
     }
   }

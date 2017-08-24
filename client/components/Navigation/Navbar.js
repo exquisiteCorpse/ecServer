@@ -7,9 +7,9 @@ const Navbar = styled.section`
     position: fixed;
     height: 60px;
     width: 100%;
-    background-color: ${props => props.theme.green};
+    background-color: ${props => props.theme.color};
     z-index: 1;
-    border-bottom: 1px solid ${props => props.theme.green};
+    border-bottom: 1px solid ${props => props.theme.color};
     display: flex;
     align-items: center;
 
@@ -36,12 +36,12 @@ const Navbar = styled.section`
           padding: 20px;
 
           &:hover, &:focus {
-            background: ${props => props.theme.greenhover};
+            background: ${props => props.theme.colorhover};
             color: ${props => props.theme.darkgrey};  
           }
 
           .active {
-            background: ${props => props.theme.greenhover};
+            background: ${props => props.theme.colorhover};
             color: ${props => props.theme.darkgrey};  
           }
         } 
