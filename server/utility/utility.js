@@ -13,7 +13,7 @@ const AWS = require('aws-sdk')
 AWS.config.loadFromPath('./config.json')
 const s3Bucket = new AWS.S3({params: {Bucket: Bucket}})
 const PHOTO_HEIGHT = 215
-const PHOTO_EDGE_HEIGHT = 40
+const PHOTO_EDGE_HEIGHT = 60
 
 const mergePhotos = (files, appendValue = '-append') => {
   return new Promise((resolve, reject) => {
