@@ -8,6 +8,7 @@ import styled, {ThemeProvider} from 'styled-components'
 
 // establishes socket connection
 import './socket'
+import 'bootstrap/dist/css/bootstrap.css'
 
 export const theme = {
   black: 'black',

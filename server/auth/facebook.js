@@ -1,31 +1,41 @@
 const passport = require('passport')
 const router = require('express').Router()
-const FacebookStrategy = require('passport-facebook').Strategy
-const {User} = require('../db/models')
+const FacebookStrategy = require('passport-facebook')
+const { User } = require('../db/models')
 module.exports = router
+
+// const transformFacebookProfile = (profile) => ({
+//   name: profile.name,
+//   avatar: profile.picture.data.url
+// })
 
 const facebookConfig = {
   clientID: process.env.FACEBOOK_CLIENT_ID,
   clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
   callbackURL: process.env.FACEBOOK_CALLBACK,
-  profileFields: ['id', 'email', 'displayName', 'name', 'picture']
+  profileFields: ['id', 'name', 'displayName', 'picture', 'email']
 }
 
-const strategy = new FacebookStrategy(facebookConfig, (token, refreshToken, profile, done) => {
-  const facebookId = profile.id
-  const username = profile.displayName
-  const email = profile.emails[0].value
+// Register Facebook Passport strategy
 
-  User.find({where: {facebookId}})
-    .then(user => user
-      ? done(null, user)
-      : User.create({username, email, facebookId})
-        .then(user => done(null, user))
-    )
-    .catch(done)
-})
+passport.use(
+  new FacebookStrategy(
+    facebookConfig,
+    (accessToken, refreshToken, profile, done) => {
+      User.findOrCreate({
+        where: { // change these fields depending on what you're actually storing!
+          username: profile.displayName,
+          facebookId: profile.id,
+          email: profile.emails[0].value
+        }
+      })
+        .spread((user) => done(null, user))
+        .catch(done)
+    }
+  )
+)
 
-passport.use(strategy)
+// Set up Facebook auth routes
 
 router.get('/', passport.authenticate('facebook', {scope: ['email']}))
 
