@@ -1,21 +1,19 @@
 body {
-  font-family: sans-serif;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  
+  #app {
+    height: 100%;
 
-  a {
-    text-decoration: none;
+    & > div {
+      height: 100%;
+      display: flex;
+    }
   }
+}
 
-  label {
-    display: block;
-  }
-
-  nav a {
-    display: inline-block;
-    margin: 1em;
-  }
-
-  form div {
-    margin: 1em;
-    display: inline-block;
-  }
+.center {
+  text-align: center;
 }
