@@ -20,7 +20,7 @@ const Navbar = styled.section`
 
       h1 {
         font-family: 'Sedgwick Ave Display';
-        font-size: 6rem;
+        font-size: 6.5rem;
       }
     }
 

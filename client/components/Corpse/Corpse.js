@@ -13,16 +13,13 @@ const Corpse = styled.section`
       margin: 0;
       height: 20px;
       color: ${props => props.theme.darkgrey};
-      font-size: 1.75rem;
       text-align: left;
       padding-left: 20px;
       margin-bottom: 5px;
       
 
-      h1 {
-        font-weight: normal;
-        display: flex;
-        padding: 16px;
+      h4 {
+        font-size: 1.75rem;
         margin: 0;
       }
     }
@@ -44,6 +41,7 @@ const Corpse = styled.section`
     .corpse-overlay {
       position: absolute;
       background: ${props => props.theme.darkgreyhover};
+      border: 1px solid ${props => props.theme.darkgrey};
       top: 0;
       bottom: 0;
       left: 0;

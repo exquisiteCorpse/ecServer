@@ -31,7 +31,7 @@ export class Main extends Component {
         </Navbar>
         <Header>
           <div className='header-message'>
-            <h3>Pitch Exquiste Corpse here...</h3>
+            <h3>Explore the Surrealist in you! Take a photo, and send it to a friend... let's see what you make together.</h3>
           </div>
         </Header>
         <div className='container-fluid gallery'>
