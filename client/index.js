@@ -14,7 +14,7 @@ export const theme = {
   black: 'black',
   white: 'white',
   lightgrey: '#ecf0f1',
-  medgrey: '#3f4649',
+  medgrey: '#bdc3c7',
   darkgrey: '#2d2f31',
   darkgreyhover: 'rgba(45, 47, 49, 0.5)',
   color: '#c0392b',
