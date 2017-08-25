@@ -5,13 +5,20 @@ import styled from 'styled-components'
 const Navbar = styled.section`
   {
     position: fixed;
-    height: 60px;
+    height: 50px;
     width: 100%;
-    background-color: ${props => props.theme.color};
+    background-color: ${props => props.theme.white};
     z-index: 1;
-    border-bottom: 1px solid ${props => props.theme.color};
+    border-bottom: 1px solid ${props => props.theme.darkgrey};
     display: flex;
     align-items: center;
+
+    .navbar-header {
+      font-family: 'Sedgwick Ave Display'; 
+      margin-left: 20px;
+      height: 5em;
+      color: ${props => props.theme.darkgrey};
+    }
 
     ul {
       position: absolute;

@@ -3,8 +3,9 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
 import {logout} from '../store'
-import NavbarContainer from './Navigation/NavbarContainer'
-import CorpseList from '../components/Corpse/CorpseList'
+import Navbar from './Navigation/Navbar'
+import Header from './Header/Header'
+import CorpseList from './Corpse/CorpseList'
 
 /**
  * COMPONENT
@@ -17,9 +18,24 @@ export class Main extends Component {
     // const {children, handleClick, isLoggedIn} = this.props
     return (
       <div id='main'>
-        <NavbarContainer />
-        <h1>Exquisite Corpse</h1>
-        <CorpseList />
+        <Navbar>
+          <div className='navbar-header'>
+            <h1>Exquisite Corpse</h1>
+          </div>
+        </Navbar>
+        <Header>
+          <div className='header-message'>
+            <h1>Download in the Google Play store.</h1>
+
+            <img src='images/googleplay.png' />
+
+          </div>
+        </Header>
+        <div className='container-fluid gallery'>
+          <div className='row text-center'>
+            <CorpseList />
+          </div>
+        </div>
       </div>
     )
   }

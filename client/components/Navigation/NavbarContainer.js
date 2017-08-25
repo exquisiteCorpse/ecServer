@@ -1,78 +1,80 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { NavLink } from 'react-router-dom'
-import {logout} from '../../store'
-import Navbar from './Navbar'
+// NOT IN USE UNTIL WE NEED FOR LOGIN
 
-/* -----------------    COMPONENT     ------------------ */
+// import React, { Component } from 'react'
+// import { connect } from 'react-redux'
+// import { NavLink } from 'react-router-dom'
+// import {logout} from '../../store'
+// import Navbar from './Navbar'
 
-class NavbarContainer extends Component {
-  constructor (props) {
-    super(props)
-    this.renderLoggedIn = this.renderLoggedIn.bind(this)
-    this.renderLoggedOut = this.renderLoggedOut.bind(this)
-  }
+// /* -----------------    COMPONENT     ------------------ */
 
-  render () {
-    const {isLoggedIn} = this.props
+// class NavbarContainer extends Component {
+//   constructor (props) {
+//     super(props)
+//     this.renderLoggedIn = this.renderLoggedIn.bind(this)
+//     this.renderLoggedOut = this.renderLoggedOut.bind(this)
+//   }
 
-    return (
-      <Navbar>
-        {
-          // isLoggedIn ? this.renderLoggedIn() : this.renderLoggedOut()
-        }
-      </Navbar>
-    )
-  }
+//   render () {
+//     const {isLoggedIn} = this.props
 
-  renderLoggedIn () {
-    return (
-      <div>
-        <h1>{this.props.currentUser.username}</h1>
+//     return (
+//       <Navbar>
+//         {
+//           isLoggedIn ? this.renderLoggedIn() : this.renderLoggedOut()
+//         }
+//       </Navbar>
+//     )
+//   }
 
-        <ul>
-          <li>
-            <NavLink to='/home' activeClassName='active'>Home</NavLink>
-          </li>
-          <li>
-            <NavLink to='/login' onClick={this.props.handleClick} activeClassName='active'>Logout</NavLink>
-          </li>
-        </ul>
-      </div>
-    )
-  }
+//   renderLoggedIn () {
+//     return (
+//       <div>
+//         <h1>{this.props.currentUser.username}</h1>
 
-  renderLoggedOut () {
-    return (
-      <div>
-        <ul>
-          <li>
-            <NavLink to='/signup' activeClassName='active'>Signup</NavLink>
-          </li>
-          <li>
-            <NavLink to='/login' activeClassName='active'>Login</NavLink>
-          </li>
-        </ul>
-      </div>
-    )
-  }
-}
+//         <ul>
+//           <li>
+//             <NavLink to='/home' activeClassName='active'>Home</NavLink>
+//           </li>
+//           <li>
+//             <NavLink to='/login' onClick={this.props.handleClick} activeClassName='active'>Logout</NavLink>
+//           </li>
+//         </ul>
+//       </div>
+//     )
+//   }
 
-/* -----------------    CONTAINER     ------------------ */
+//   renderLoggedOut () {
+//     return (
+//       <div>
+//         <ul>
+//           <li>
+//             <NavLink to='/signup' activeClassName='active'>Signup</NavLink>
+//           </li>
+//           <li>
+//             <NavLink to='/login' activeClassName='active'>Login</NavLink>
+//           </li>
+//         </ul>
+//       </div>
+//     )
+//   }
+// }
 
-const mapState = (state) => {
-  return {
-    isLoggedIn: !!state.currentUser.id,
-    currentUser: state.currentUser
-  }
-}
+// /* -----------------    CONTAINER     ------------------ */
 
-const mapDispatch = (dispatch) => {
-  return {
-    handleClick () {
-      dispatch(logout())
-    }
-  }
-}
+// const mapState = (state) => {
+//   return {
+//     isLoggedIn: !!state.currentUser.id,
+//     currentUser: state.currentUser
+//   }
+// }
 
-export default connect(mapState, mapDispatch)(NavbarContainer)
+// const mapDispatch = (dispatch) => {
+//   return {
+//     handleClick () {
+//       dispatch(logout())
+//     }
+//   }
+// }
+
+// export default connect(mapState, mapDispatch)(NavbarContainer)
