@@ -11,11 +11,11 @@ import {me, fetchCorpses} from './store'
  * COMPONENT
  */
 class Routes extends Component {
-  componentDidMount() {
+  componentDidMount () {
     this.props.loadInitialData()
   }
 
-  render() {
+  render () {
     const {isLoggedIn} = this.props
 
     return (
@@ -23,17 +23,17 @@ class Routes extends Component {
         <Main>
           <Switch>
             {/* Routes placed here are available to all visitors */}
-            <Route path="/login" component={Login}/>
-            <Route path="/signup" component={Signup}/>
+            <Route path='/login' component={Login} />
+            <Route path='/signup' component={Signup} />
+            <Route path='/home' component={UserHome} />
             {
               isLoggedIn &&
               <Switch>
                 {/* Routes placed here are only available after logging in */}
-                <Route path="/home" component={UserHome}/>
               </Switch>
             }
             {/* Displays our Login component as a fallback */}
-            <Route component={Login}/>
+            <Route component={Main} />
           </Switch>
         </Main>
       </Router>
@@ -54,7 +54,7 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    loadInitialData() {
+    loadInitialData () {
       dispatch(me())
       dispatch(fetchCorpses())
     }

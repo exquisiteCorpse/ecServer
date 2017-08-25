@@ -8,7 +8,7 @@ const GET = 'GET_CORPSE'
 const init = corpses => ({type: INITIALIZE, corpses})
 const get = corpse => ({type: GET, corpse})
 
-export default function reducer(corpses = initialState, action) {
+export default function reducer (corpses = initialState, action) {
   switch (action.type) {
     case INITIALIZE:
       return action.corpses
@@ -27,6 +27,6 @@ export const fetchCorpses = () => dispatch => {
 
 export const fetchCorpse = (id) => dispatch => {
   axios.get(`/api/corpse/${id}`)
-    .then(res => dispatch(update(res.data)))
+    .then(res => dispatch(get(res.data)))
     .catch(err => console.error(`Fetching corpse id ${id} unsuccessful`, err))
 }

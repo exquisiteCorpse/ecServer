@@ -1,9 +1,10 @@
 'use strict'
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {fetchCorpse} from '../../store/corpses'
+import {fetchCorpses} from '../../store/corpses'
+import Corpse from './Corpse'
 
-const CorpseItem = (props) => {
+const CorpseList = (props) => {
   const {corpses} = props
   return (
     <div>
@@ -12,26 +13,26 @@ const CorpseItem = (props) => {
           .filter(corpse => corpse.complete)
           .map(corpse => {
             // TODO: This should be in CorpseItem component!
-          const image = `https://s3.amazonaws.com/exquisitecorpse-s3-001/corpse-${corpse.id}.jpeg`
-          return (
-            <div key={corpse.id}>
-              {corpse.title}
-              <img src={image} width="400"/>
-            </div>
-          )
-        })
+            const image = `https://s3.amazonaws.com/exquisitecorpse-s3-001/corpse-${corpse.id}.jpeg`
+            return (
+              <div className='col-pad col-lg-3 col-md-4 col-xs-6' key={corpse.id}>
+                <Corpse>
+                  <div className='corpse-header'>
+                    {corpse.title}
+                  </div>
+                  <div className='corpse-image'>
+                    <img src={image} className='img-responsive center-block' />
+                  </div>
+                </Corpse>
+              </div>
+            )
+          })
       }
     </div>
   )
 }
 
 const mapState = ({corpses}) => ({corpses})
-const mapDispatch = (dispatch) => {
-  return {
-    fetchCorpseItem(id) {
-      dispatch(fetchCorpse(id))
-    }
-  }
-}
+const mapDispatch = null
 
-export default connect(mapState, mapDispatch)(CorpseItem)
+export default connect(mapState, mapDispatch)(CorpseList)
