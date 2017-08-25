@@ -22,13 +22,16 @@ export class Main extends Component {
           <div className='navbar-header'>
             <h1>Exquisite Corpse</h1>
           </div>
+          <div>
+            <ul className='navbar-message'>
+              <li>Download in the Google Play store.</li>
+              <li><img src='images/googleplay.png' /></li>
+            </ul>
+          </div>
         </Navbar>
         <Header>
           <div className='header-message'>
-            <h1>Download in the Google Play store.</h1>
-
-            <img src='images/googleplay.png' />
-
+            <h3>Pitch Exquiste Corpse here...</h3>
           </div>
         </Header>
         <div className='container-fluid gallery'>

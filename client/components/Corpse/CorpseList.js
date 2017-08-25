@@ -22,6 +22,7 @@ const CorpseList = (props) => {
                   </div>
                   <div className='corpse-image'>
                     <img src={image} className='img-responsive center-block' />
+                    <div className='corpse-overlay' />
                   </div>
                 </Corpse>
               </div>

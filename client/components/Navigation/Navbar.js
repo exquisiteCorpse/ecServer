@@ -5,7 +5,7 @@ import styled from 'styled-components'
 const Navbar = styled.section`
   {
     position: fixed;
-    height: 50px;
+    height: 80px;
     width: 100%;
     background-color: ${props => props.theme.white};
     z-index: 1;
@@ -14,10 +14,14 @@ const Navbar = styled.section`
     align-items: center;
 
     .navbar-header {
-      font-family: 'Sedgwick Ave Display'; 
+      height: 100%; 
       margin-left: 20px;
-      height: 5em;
       color: ${props => props.theme.darkgrey};
+
+      h1 {
+        font-family: 'Sedgwick Ave Display';
+        font-size: 6rem;
+      }
     }
 
     ul {
@@ -28,30 +32,16 @@ const Navbar = styled.section`
       top: 0px;
       right: 0px;
       list-style: none;
+      display: flex;
+      align-items: center;
 
       li {
-        height: 60px;
         float: left;
+        font-size: 2rem;
 
-        a {
-          height: 100%;
-          width: auto;
-          display: block;
-          color: ${props => props.theme.white};
-          text-align: center;
-          text-decoration: none;
-          padding: 20px;
-
-          &:hover, &:focus {
-            background: ${props => props.theme.colorhover};
-            color: ${props => props.theme.darkgrey};  
-          }
-
-          .active {
-            background: ${props => props.theme.colorhover};
-            color: ${props => props.theme.darkgrey};  
-          }
-        } 
+        img {
+          width: 20rem;
+        }
       } 
     }
   }

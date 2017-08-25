@@ -6,7 +6,7 @@ const Corpse = styled.section`
   {
     background: ${props => props.theme.white};
     color: ${props => props.theme.darkgrey};
-    border: 1px solid ${props => props.theme.darkgrey};
+    
     text-align: center;
     z-index: 2;
 
@@ -16,9 +16,8 @@ const Corpse = styled.section`
       height: 60px;
       color: ${props => props.theme.darkgrey};
       font-size: 2rem;
-      font-weight: bold;
       padding-top: 1.5rem;
-      border-bottom: 1px solid ${props => props.theme.darkgrey};
+      
 
       h1 {
         font-weight: normal;
@@ -29,7 +28,23 @@ const Corpse = styled.section`
     }
 
     .corpse-image {
-      margin: 10px;
+      padding: 10px;
+      background: ${props => props.theme.lightgrey};
+      border: 1px solid ${props => props.theme.lightgrey};
+    }
+
+    .corpse-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: none;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+
+      &:hover, &:focus {
+        background: ${props => props.theme.darkgreyhover};
+      }
     }
 
     .corpse-info {
