@@ -20,8 +20,9 @@ const CorpseList = (props) => {
                   <div className='corpse-header'>
                     {corpse.title}
                   </div>
-                  <div className='corpse-image'>
-                    <img src={image} className='img-responsive center-block' />
+                  <div className='image-container'>
+                    <img src={image} className='corpse-image img-responsive center-block' />
+                    <div className='corpse-overlay' />
                   </div>
                 </Corpse>
               </div>

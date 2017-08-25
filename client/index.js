@@ -13,10 +13,10 @@ import 'bootstrap/dist/css/bootstrap.css'
 export const theme = {
   black: 'black',
   white: 'white',
-  lightgrey: '#585f62',
-  medgrey: '#3f4649',
+  lightgrey: '#ecf0f1',
+  medgrey: '#bdc3c7',
   darkgrey: '#2d2f31',
-  darkgreyhover: '#2c3835',
+  darkgreyhover: 'rgba(45, 47, 49, 0.5)',
   color: '#c0392b',
   colorhover: '#e74c3c'
 }
