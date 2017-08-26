@@ -15,7 +15,7 @@ const CorpseList = (props) => {
             // TODO: This should be in CorpseItem component!
             const image = `https://s3.amazonaws.com/exquisitecorpse-s3-001/corpse-${corpse.id}.jpeg`
             return (
-              <div className='col-pad col-lg-3 col-md-4 col-xs-6' key={corpse.id}>
+              <div className='col-space col-lg-3 col-md-4 col-xs-6' key={corpse.id}>
                 <Corpse>
                   <div className='corpse-header'>
                     <h4>{corpse.title}</h4>

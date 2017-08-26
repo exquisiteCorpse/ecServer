@@ -16,7 +16,6 @@ const Corpse = styled.section`
       text-align: left;
       padding-left: 20px;
       margin-bottom: 5px;
-      
 
       h4 {
         font-size: 1.75rem;
@@ -40,7 +39,7 @@ const Corpse = styled.section`
 
     .corpse-overlay {
       position: absolute;
-      background: ${props => props.theme.darkgreyhover};
+      background: ${props => props.theme.color};
       border: 1px solid ${props => props.theme.darkgrey};
       top: 0;
       bottom: 0;
