@@ -6,7 +6,6 @@ const Corpse = styled.section`
   {
     background: ${props => props.theme.white};
     color: ${props => props.theme.darkgrey};
-    z-index: 2;
 
     .corpse-header {
       background: ${props => props.theme.white};
@@ -49,7 +48,7 @@ const Corpse = styled.section`
       transition: .5s ease;
       width: 100%;
       height: 100%;
-      z-index: 2;
+      z-index: 1;
     }
 
     .image-container:hover .corpse-overlay {

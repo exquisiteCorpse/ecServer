@@ -8,7 +8,7 @@ const Navbar = styled.section`
     height: 80px;
     width: 100%;
     background-color: ${props => props.theme.white};
-    z-index: 1;
+    z-index: 2;
     border-bottom: 1px solid ${props => props.theme.darkgrey};
     display: flex;
     align-items: center;

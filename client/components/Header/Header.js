@@ -14,6 +14,7 @@ const Header = styled.section`
     border-bottom: 1px solid ${props => props.theme.darkgrey};
     display: flex;
     align-items: center;
+    z-index: 2;
 
     .header-message {
       color: ${props => props.theme.darkgrey};
