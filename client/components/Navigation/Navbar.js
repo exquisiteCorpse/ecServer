@@ -54,7 +54,7 @@ const Navbar = styled.section`
         margin: 0 auto;
 
         h1 {
-          font-size: 4.75rem;
+          font-size: 4.5rem;
           text-align: center;
         }
       }
