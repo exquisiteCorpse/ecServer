@@ -1,10 +1,11 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import styled from 'styled-components'
 
 const Navbar = styled.section`
   {
     position: fixed;
+    top: 0px;
+    left: 0px;
     height: 80px;
     width: 100%;
     background-color: ${props => props.theme.white};
@@ -20,29 +21,47 @@ const Navbar = styled.section`
 
       h1 {
         font-family: 'Sedgwick Ave Display';
-        font-size: 6.5rem;
+        font-size: 6rem;
       }
+    }
+
+    .navbar-message {
+      height: 100%;
     }
 
     ul {
       position: absolute;
+      top: 0;
+      right: 0;
       margin: 0;
       padding: 0;
       overflow: hidden;
-      top: 0px;
-      right: 0px;
       list-style: none;
       display: flex;
       align-items: center;
 
       li {
-        float: left;
         font-size: 2rem;
 
         img {
           width: 20rem;
         }
       } 
+    }
+
+    @media only screen and (max-width: 768px) {
+      .navbar-header {
+        margin: 0 auto;
+
+        h1 {
+          font-size: 4.75rem;
+          text-align: center;
+        }
+      }
+
+      .navbar-message {
+        display: none;
+      }
     }
   }
 `

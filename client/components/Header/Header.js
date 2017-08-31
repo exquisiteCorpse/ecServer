@@ -6,10 +6,11 @@ import styled from 'styled-components'
 
 const Header = styled.section`
   {
-    position: fixed;
+    position: absolute;
+    top: 80px;
+    left: 0px;
     height: 100px;
     width: 100%;
-    top: 80px;
     background-color: ${props => props.theme.white};
     border-bottom: 1px solid ${props => props.theme.darkgrey};
     display: flex;
@@ -19,20 +20,17 @@ const Header = styled.section`
     .header-message {
       color: ${props => props.theme.darkgrey};
       margin: 0 auto;
-      display: flex;
-      align-items: center;
 
       h3 {
         font-size: 2.5rem;
         font-weight: bold;
         margin: 0;
+        text-align: center;
       }
+    }
 
-      img {
-        height: 10rem;
-        width: auto;
-        float: right;
-      }
+    @media only screen and (max-width: 768px) {
+      height: 160px;
     }
   }
 `
