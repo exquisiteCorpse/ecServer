@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
 import {logout} from '../store'
+import { Row, Column } from './Grid/Grid'
 import Navbar from './Navigation/Navbar'
 import Header from './Header/Header'
 import CorpseList from './Corpse/CorpseList'
@@ -13,32 +14,38 @@ import CorpseList from './Corpse/CorpseList'
  *  else common to our entire app. The 'picture' inside the frame is the space
  *  rendered out by the component's `children`.
  */
-export class Main extends Component {
+class Main extends Component {
   render () {
     // const {children, handleClick, isLoggedIn} = this.props
     return (
-      <div id='main'>
-        <Navbar>
-          <div className='navbar-header'>
-            <h1>Exquisite Corpse</h1>
-          </div>
-          <div>
-            <ul className='navbar-message'>
-              <li>Download in the Google Play store.</li>
-              <li><img src='images/googleplay.png' /></li>
-            </ul>
-          </div>
-        </Navbar>
-        <Header>
-          <div className='header-message'>
-            <h3>Explore the Surrealist in you! Take a photo, and send it to a friend... let's see what you make together.</h3>
-          </div>
-        </Header>
-        <div className='container-fluid gallery'>
-          <div className='row text-center'>
-            <CorpseList />
-          </div>
-        </div>
+      <div>
+        <Row>
+          <Navbar>
+            <Column xs='12' lg='6'>
+              <div className='navbar-header'>
+                <h1>Exquisite Corpse</h1>
+              </div>
+            </Column>
+            <Column xs='12' lg='6'>
+              <div className='navbar-message'>
+                <ul>
+                  <li>Download in the Google Play store.</li>
+                  <li><img src='images/googleplay.png' /></li>
+                </ul>
+              </div>
+            </Column>
+          </Navbar>
+        </Row>
+        <Row>
+          <Header>
+            <Column xs='12' lg='12' className='header-message'>
+              <h3>Explore the Surrealist in you! Take a photo, and send it to a friend... let's see what you make together.</h3>
+            </Column>
+          </Header>
+        </Row>
+        <Row>
+          <CorpseList />
+        </Row>
       </div>
     )
   }

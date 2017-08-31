@@ -1,33 +1,16 @@
 'use strict'
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {fetchCorpses} from '../../store/corpses'
-import Corpse from './Corpse'
+import CorpseItem from './CorpseItem'
 
 const CorpseList = (props) => {
   const {corpses} = props
   return (
-    <div>
+    <div className='gallery center'>
       {
         corpses.length && corpses
           .filter(corpse => corpse.complete)
-          .map(corpse => {
-            // TODO: This should be in CorpseItem component!
-            const image = `https://s3.amazonaws.com/exquisitecorpse-s3-001/corpse-${corpse.id}.jpeg`
-            return (
-              <div className='col-space col-lg-3 col-md-4 col-xs-6' key={corpse.id}>
-                <Corpse>
-                  <div className='corpse-header'>
-                    <h4>{corpse.title}</h4>
-                  </div>
-                  <div className='image-container'>
-                    <img src={image} className='corpse-image img-responsive center-block' />
-                    <div className='corpse-overlay' />
-                  </div>
-                </Corpse>
-              </div>
-            )
-          })
+          .map(corpse => <CorpseItem key={corpse.id} corpse={corpse} />)
       }
     </div>
   )
