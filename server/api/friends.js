@@ -13,13 +13,33 @@ router.get('/:userId', (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
+  ///do I do an include here?
   db.model('Friend').create(req.body)
-    .then(friend => res.json(friend))
+    .then((friend) => {
+      db.model('Friend').create({where: {
+        userId: friend.friendId,
+        friendId: friend.userId
+      }})
+        .then(() => {
+
+        })
+      return res.json(friend)
+    })
     .catch(next)
 })
 
-router.delete('/', (req, res, next) => {
-  db.model('Friend').destroy({where: req.body})
+router.delete('/:userId/:friendId', (req, res, next) => {
+  db.model('Friend').destroy({where: {
+    userId: req.params.userId,
+    friendId: req.params.friendId
+  }})
+    .then((friend) => {
+      db.model('Friend').destroy({where: {
+        userId: req.params.friendId,
+        friendId: req.params.userId
+      }})
+      return friend
+    })
     .then(friend => res.json(friend))
     .catch(next)
 })
