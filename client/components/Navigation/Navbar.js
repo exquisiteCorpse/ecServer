@@ -15,7 +15,7 @@ const Navbar = styled.section`
     align-items: center;
 
     .navbar-header {
-      height: 100%; 
+      height: 100%;
       margin-left: 20px;
       color: ${props => props.theme.darkgrey};
 
@@ -43,10 +43,20 @@ const Navbar = styled.section`
       li {
         font-size: 2rem;
 
-        img {
-          width: 20rem;
+        .git {
+          width: 7rem;
         }
-      } 
+        .tube {
+          width: 12rem;
+        }
+
+        img {
+          padding-right: 20px;
+          padding-top: 15px;
+
+        }
+
+      }
     }
 
     @media only screen and (max-width: 768px) {
