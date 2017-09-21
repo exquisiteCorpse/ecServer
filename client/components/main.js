@@ -29,10 +29,10 @@ class Main extends Component {
             <Column xs='12' lg='6'>
               <div className='navbar-message'>
                 <ul>
-                  <a href='https://www.youtube.com/watch?v=ndrjeA0yxAU' target="_blank">
+                  <a href='https://www.youtube.com/watch?v=ndrjeA0yxAU'>
                     <li><img className='tube' src='images/yt_logo.png' /></li>
                   </a>
-                  <a href='https://github.com/exquisiteCorpse' target="_blank">
+                  <a href='https://github.com/exquisiteCorpse'>
                     <li><img className='git' src='images/github-512.png' /></li>
                   </a>
                 </ul>
