@@ -47,7 +47,7 @@ const Navbar = styled.section`
           width: 7rem;
         }
         .tube {
-          width: 12rem;
+          width: 13rem;
         }
 
         img {
